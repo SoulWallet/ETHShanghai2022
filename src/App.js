@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
 /* ERC71 based Solidity Contract Interface */
-import filecoinNFTHack from "./utils/FilecoinNFTHack.json";
 import SBTsHack from "./utils/SBTsHack.json";
 
 /* NFT.Storage import for creating an IPFS CID & storing with Filecoin */
@@ -122,7 +121,6 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          // filecoinNFTHack.abi,
           SBTsHack.abi,
           signer
         );
@@ -254,7 +252,6 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          // filecoinNFTHack.abi,
           SBTsHack.abi,
           signer
         );
@@ -354,7 +351,6 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          // filecoinNFTHack.abi,
           SBTsHack.abi,
           signer
         );

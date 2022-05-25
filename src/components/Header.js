@@ -10,7 +10,7 @@ const Header = () => {
         rel="noreferrer"
       >
         <img
-          alt="NFTHack Logo"
+          alt="ETH Shanghai 2022 NFTHack Logo"
           style={{ height: "200px" }}
           src={nftHackLogo}
         ></img>
