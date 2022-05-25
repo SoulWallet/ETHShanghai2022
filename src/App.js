@@ -40,6 +40,7 @@ const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
+  const [list, setList] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
   const [remainingNFTs, setRemainingNFTs] = useState("");
@@ -148,6 +149,7 @@ const App = () => {
   const resetState = () => {
     setLinksObj(INITIAL_LINK_STATE);
     setName("");
+    setList("");
     setImageView("");
   }
 
