@@ -1,12 +1,5 @@
-# Info
-
-This project is a simple ERC721 (ethereum) NFT minting contract & user interface.
-It uses IPFS Protocol to create unique CIDs that point to the NFT data, it then stores this information on Filecoin for reliable & persistent storage.
-
-It takes advantage of the very handy IPFS & Filecoin dev ecosystem tool NFT.Storage to make doing this easy (& free!).
-
 # Quick start
-1. Clone the project & move to project directory `>git clone https://github.com/DeveloperAlly/filecoin_nft_starter.git && cd filecoin-nft-starter`
+1. git clone git@github.com:fastRedwood/ETHShanghai2022.git
 2. Create a .env file in the root `>touch .env`
 3. Get an NFT.Storage API key https://nft.storage/ and add this to the .env
 4. Add your rinkeby blockchain server api and url to the .env file (ive used alchemy here, though moralis & infura are also awesome)
@@ -14,30 +7,6 @@ It takes advantage of the very handy IPFS & Filecoin dev ecosystem tool NFT.Stor
 6. Deploy the solidity contract to the rinkeby testnet using hardhat `>npx hardhat run scripts/deploy.js --network rinkeby`
 7. Add your contract address to the .env file
 8. Run your front end in dev mode `>npm start` OR deploy with Fleek https://fleek.co/
-
-# Read-me still a work in progress.... watch this git commit! XD
-
-Dev Things (contracts):
-- Solidity
-- Hardhat
-- Alchemy 
-
-Ways to save your NFT SVG
-
-1. You can save it in the contract itself
-2. You can save it as an IPFS CID
-3. You can use web2... (we wouldn't do that though would we!)
-
-Run contract: npx hardhat
-
-> run scripts/run.js  
-> Deploy contract to rinkeby:
-> npx hardhat run scripts/deploy.js --network rinkeby
-
-Running the front end localy (or host on Fleek)
-npm install && npm start
-
-To make this project from scratch:
 
 Dependencies:
 Node installed.
