@@ -1,0 +1,199 @@
+.App {
+  height: 100vh;
+  background-color: #0d1116;
+  overflow: scroll;
+  text-align: center;
+}
+
+.container {
+  height: 100%;
+  background-color: #0d1116;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+}
+
+.header-container {
+  padding-top: 0px;
+}
+
+.header {
+  margin: 0;
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.sub-text {
+  font-size: 25px;
+  color: white;
+}
+
+.sub-sub-text {
+  font-size: 20px;
+  color: white;
+  padding: 0;
+  margin: 0;
+}
+
+.gradient-text {
+  background: -webkit-linear-gradient(left, #60c657 30%, #35aee2 60%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.cta-button {
+  height: 45px;
+  border: 0;
+  width: auto;
+  padding-left: 40px;
+  padding-right: 40px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+}
+
+.connect-wallet-button {
+  background: -webkit-linear-gradient(left, #60c657, #35aee2);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+}
+
+.connect-to-wallet-button {
+  background: -webkit-linear-gradient(left, #fff985, #ff84fd);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+}
+
+.connect-wallet-button-disabled {
+  /* background: -webkit-linear-gradient(left, #60c657, #35aee2); */
+  background: grey;
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  color: darkgrey;
+}
+
+.mint-button {
+  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+  margin-right: 15px;
+}
+
+.opensea-button {
+  background-color: rgb(32, 129, 226);
+}
+
+.mint-count {
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.footer-container-twitter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 30px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  flex-direction: column;
+}
+
+.twitter-logo {
+  width: 35px;
+  height: 35px;
+}
+
+.footer-text {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* KeyFrames */
+@-webkit-keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.header-menu-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.input {
+  border-radius: 20px;
+  background-size: 200% 200%;
+  height: 45px;
+  border: 0;
+  width: auto;
+  padding-left: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.nft-viewer-outer {
+  margin: 20px;
+}
+
+.nft-viewer-container {
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.nft-viewer-column {
+  /* width: 20%; */
+  min-height: 100px;
+  height: auto;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid white;
+  border-radius: 20px;
+}

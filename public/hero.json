@@ -1,0 +1,37 @@
+{
+"attributes": [
+    {
+        "trait_type":"性格",
+        "value":"内向"
+    },
+    {
+        "trait_type":"智商",
+        "value":"超级高" 
+    },
+    {
+        "trait_type":"体力",
+        "value":"超级差" 
+    },    
+    {
+        "display_type":"boost_percentage",
+        "trait_type":"幸运值",
+        "value":"100"
+    },
+    {
+        "display_type":"boost_number",
+        "trait_type":"财富值",
+        "value":"70"
+    },
+    {
+        "display_type":"date",
+        "trait_type":"生日",
+        "value":"1546360800"
+    }
+],
+
+    "description":"我是测试的Mumbai网络",
+    "external_url":"https://jlab.tech",
+    "image":"https://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym.ipfs.nftstorage.link/",
+    "name":"jhfnetboy"
+
+}
