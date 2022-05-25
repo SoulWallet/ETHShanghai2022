@@ -1,6 +1,6 @@
 # Quick start
 1. git clone git@github.com:fastRedwood/ETHShanghai2022.git
-2. Create a .env file in the root `>touch .env`
+2. Copy  a .env file  `>cp -a env.example  .env` and fill with your own parameters.
 3. Get an NFT.Storage API key https://nft.storage/ and add this to the .env
 4. Add your rinkeby blockchain server api and url to the .env file (ive used alchemy here, though moralis & infura are also awesome)
 5. Install packages `>npm install`
@@ -8,13 +8,24 @@
 7. Add your contract address to the .env file
 8. Run your front end in dev mode `>npm start` OR deploy with Fleek https://fleek.co/
 
-Dependencies:
-Node installed.
-Metamask, https://metamask.io/download.html
-Alchemy server details (or infura/moralis),
-etherscan account (for verifying contract)
+## DApp Step Show
 
-Setup from scratch instead:
+![](src/assets/2.png)
+![](src/assets/3.png)
+![](src/assets/4.png)
+![](src/assets/5.png)
+![](src/assets/6.png)
+![](src/assets/7.png)
+![](src/assets/1.png)
+![](src/assets/8.png)
+
+![](src/assets/9.png)
+![](src/assets/10.png)
+![](src/assets/11.png)
+![](src/assets/12.png)
+
+
+## Setup from scratch instead:
 
 > npx create-react-app my-app-name
 > cd my-app-name
@@ -28,7 +39,6 @@ install dependencies:
 
 Tasks - development of contract
 
-> touch .env
 > add .env to the .gitignore file
 > rm ./contracts/Greeter.sol
 > rm ./scripts/sample-script.js
@@ -42,9 +52,6 @@ Write run.js and test your contract
 
 > npx hardhat run scripts/run.js
 
-Tasks - Deployment of Solidity contract
-Sign up for Moralis and get a QuickNode
-Add it to hardhat config
 Sign up for etherscan / get an API key & add it to hardhat.config
 networks: {
 rinkeby: {
@@ -57,18 +64,7 @@ etherscan: {
 // Obtain one at https://etherscan.io/
 apiKey: process.env.ETHERSCAN_API_KEY,
 }
-
-> npx hardhat run scripts/deploy.js --network rinkeby
-
-Tasks - development of front end
-
-- create a utils folder and put the deployed contract ABI json here
-
-Tasks - deployment of front end
-
-- Use Fleek.co
-
-Resources
+### Resources
 
 - Read the IPFS best practice guide for NFT's https://docs.ipfs.io/how-to/mint-nfts-with-ipfs/#a-short-introduction-to-nfts
 - See the NFT.School guide https://nftschool.dev/
