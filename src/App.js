@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 /* ERC71 based Solidity Contract Interface */
-import SBTsHack from "./utils/SBTsHack.json";
+// import SBTsHack from "./utils/SBTsHack.json";
+import SoulToken from "./utils/SoulToken.json";
 
 /* NFT.Storage import for creating an IPFS CID & storing with Filecoin */
 import { NFTStorage, File } from "nft.storage";
@@ -36,7 +37,7 @@ const INITIAL_TRANSACTION_STATE = {
 
 // const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 // set constant contract address cause of server in fleek has no .env
-const CONTRACT_ADDRESS = "0x0144bA53db4A6E52F7310F8D1505a5c7bD2961f3";
+const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
 
 
 const App = () => {
@@ -124,7 +125,7 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          SBTsHack.abi,
+          SoulToken.abi,
           signer
         );
 
@@ -256,7 +257,7 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          SBTsHack.abi,
+          SoulToken.abi,
           signer
         );
 
@@ -355,7 +356,7 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          SBTsHack.abi,
+          SoulToken.abi,
           signer
         );
 
@@ -384,7 +385,7 @@ const App = () => {
   return (
     <Layout connected={currentAccount === ""} connectWallet={connectWallet}>
       <>
-        <p className="sub-sub-text">{`Remaining NFT's: ${remainingNFTs}`}</p>
+        <p className="sub-sub-text">{`Received Soul Bound Tokens: ${remainingNFTs}`}</p>
         {transactionState !== INITIAL_TRANSACTION_STATE && <Status transactionState={transactionState}/>}
         {imageView &&
           !linksObj.etherscan && <Link link={imageView} description="See IPFS image link"/>}
