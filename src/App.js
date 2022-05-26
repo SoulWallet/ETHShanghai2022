@@ -34,7 +34,10 @@ const INITIAL_TRANSACTION_STATE = {
   warning: "",
 };
 
-const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
+// const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
+// set constant contract address cause of server in fleek has no .env
+const CONTRACT_ADDRESS = "0x0144bA53db4A6E52F7310F8D1505a5c7bD2961f3";
+
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
