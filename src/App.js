@@ -201,9 +201,20 @@ const App = () => {
           name: `${name}: Soul token for friendship @ ETH Shanghai Hackthon 2022`,
           description: "Soul token sample. jhfnetboy",
           external_url: "https://soul-token.io/3",
-          image: "ipfs://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym"
+          // image: "ipfs://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym"
+          image: new File(
+            [
+              `${baseSVG}${name}</text>
+      </svg>`,
+            ],
+            `SoulTokens.svg`,
+            {
+              type: "image/svg+xml",
+            }
+          ),          
         })
         .then((metadata) => {
+          console.log(metadata)
           setTransactionState({
             ...transactionState,
             success: "Saved NFT data to NFT.Storage...!! ",
@@ -228,6 +239,7 @@ const App = () => {
           askContractToMintNft(metadata.url);
         });
     } catch (error) {
+      console.log(error)
       console.log("Could not save NFT to NFT.Storage - Aborted minting");
       setTransactionState({
         ...INITIAL_TRANSACTION_STATE,
@@ -269,7 +281,7 @@ const App = () => {
         connectedContract.on(
           "MakePropose",
           (from, to,proposeId, eventId) => {
-            console.log("event listener", from, to, proposeId.toNumber(), eventId.toNumber());
+            console.log("event listener", from, to, proposeId, eventId.toNumber());
             setLinksObj({
               ...linksObj,
               opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
