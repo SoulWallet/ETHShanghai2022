@@ -2,13 +2,13 @@ import React from "react";
 
 const MintNFTInput = ({...props}) => {
     console.log("mintuiprops", props)
-    let {name, setName, list, setList, transactionState, createNFTData} = props;
+    let {name, setName, receiverAddress, setReceiverAddress, transactionState, createNFTData} = props;
     return (
     <div>
         <p>
           <input
             className="input"
-            placeholder="Enter your name"
+            placeholder="Enter Soul Token Name"
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
             required
@@ -17,12 +17,12 @@ const MintNFTInput = ({...props}) => {
           /><br/><br/>
           <input
             className="input"
-            placeholder="Enter your address list"
+            placeholder="Enter receiver address "
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
             required
-            value={list}
-            onChange={(e) => setList(e.target.value)}
+            value={receiverAddress}
+            onChange={(e) => setReceiverAddress(e.target.value)}
           />          
         </p>
         <button

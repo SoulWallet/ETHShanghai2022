@@ -44,6 +44,8 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
   const [list, setList] = useState("");
+  const [receiverAddress, setrRceiverAddress] = useState("");
+  
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
   const [remainingNFTs, setRemainingNFTs] = useState("");
@@ -192,22 +194,14 @@ const App = () => {
     try {
       await client
         .store({
-          name: `${name}: SBTs@ ETH Shanghai Hackthon 2022`,
+          name: `${name}: Soul token for friendship @ ETH Shanghai Hackthon 2022`,
           description:
-            "NFT created for ETH Shanghai Hackthon 2022 and limited to 10000 NFT tokens",
-          image: new File(
-            [
-              `${baseSVG}${name}</text>
-      </svg>`,
-            ],
-            `FilecoinNFTHack.svg`,
-            {
-              type: "image/svg+xml",
-            }
-          ),
-          traits: {
-            awesomeness: "100", //probs should use 0-1 for solidity
-          },
+            "Soul token sample. jhfnetboy",
+          external_url: "https://soul-token.io/3",
+          image: "ipfs://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym",
+          // traits: {
+          //   type: "1", 
+          // },
         })
         .then((metadata) => {
           setTransactionState({
@@ -262,20 +256,33 @@ const App = () => {
         );
 
         console.log("Opening wallet");
-        let nftTxn = await connectedContract.mintMyNFT(IPFSurl);
+        let nftTxn = await connectedContract.sendRequest(receiverAddress, 1, true, IPFSurl);
+            //   function sendRequest(
+            //     address _party,
+            //     uint256 _eventId,
+            //     bool _mutualMint,
+            //     string memory _tokenURI
+            // ) ipfs://bafkreidgmyqs42h27e3k6ojws4rjufmcpw5erhlyxvy2buuedvtppngs24
 
         connectedContract.on(
-          "NewFilecoinNFTMinted",
-          (from, tokenId, tokenURI) => {
-            console.log("event listener", from, tokenId.toNumber(), tokenURI);
+          "MakePropose",
+          (from, to,proposeId, eventId) => {
+            console.log("event listener", from, to, proposeId.toNumber(), eventId.toNumber());
             setLinksObj({
               ...linksObj,
-              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`,
-              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}:${tokenId.toNumber()}`,
+              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
+              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}:${eventId.toNumber()}`,
               etherscan: `https://rinkeby.etherscan.io/tx/${nftTxn.hash}`,
             });
           }
         );
+
+      //   event MakePropose(
+      //     address indexed from,
+      //     address indexed to,
+      //     bytes32 proposeId,
+      //     uint256 eventId
+      // );
 
         //SHOULD UPDATE IMAGELINK to returned value
         await nftTxn.wait();
