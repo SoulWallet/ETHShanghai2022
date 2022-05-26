@@ -2,7 +2,8 @@ const main = async () => {
     const nftContractFactory = await hre.ethers.getContractFactory(
       "SoulToken"
     );
-    // 0xFCA6c8f824a651d86a1738515F25065A83458e9e
+    // 0x91D5F7696CdAf23e1B74dE75FC4de605178c05Cc
+    // deployed on rinkeby 5-26
     const nftContract = await nftContractFactory.deploy(0);
     await nftContract.deployed();
     console.log("Contract deployed to:", nftContract.address);

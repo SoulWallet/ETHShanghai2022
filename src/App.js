@@ -179,7 +179,8 @@ const App = () => {
     // install it
     // Set Up the NFT.Storage Client
     const client = new NFTStorage({
-      token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
+      // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgxOTQ0NzgzOCwibmFtZSI6InRleHR2ZXJzZS10ZXh0In0.V2Qb3z5JIT9dqvksafgTFfVTV92Yx0upcODojhgMHKc",
     });
 
     //lets load up this token with some metadata and our image and save it to NFT.storage
