@@ -14,7 +14,7 @@ const MintNFTInput = ({...props}) => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-          /><br/><br/>
+          /><br/><br/>        
           <input
             className="input"
             placeholder="Enter receiver address "

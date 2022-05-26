@@ -43,12 +43,11 @@ const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
-  const [list, setList] = useState("");
-  const [receiverAddress, setrRceiverAddress] = useState("");
+  const [receiverAddress, setReceiverAddress] = useState("");
   
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
-  const [remainingNFTs, setRemainingNFTs] = useState("");
+  // const [remainingNFTs, setRemainingNFTs] = useState("");
   const [nftCollectionData, setNftCollectionData] = useState("");
   const [recentlyMinted, setRecentlyMinted] = useState("");
   const [transactionState, setTransactionState] = useState(
@@ -131,16 +130,16 @@ const App = () => {
           signer
         );
 
-        connectedContract.on("RemainingMintableNFTChange", (remainingNFTs) => {
-          setRemainingNFTs(remainingNFTs);
-        });
-        connectedContract.on(
-          "NewFilecoinNFTMinted",
-          (sender, tokenId, tokenURI) => {
-            console.log("event - new minted NFT");
-            fetchNFTCollection();
-          }
-        );
+        // connectedContract.on("RemainingMintableNFTChange", (remainingNFTs) => {
+        //   setRemainingNFTs(remainingNFTs);
+        // });
+        // connectedContract.on(
+        //   "NewFilecoinNFTMinted",
+        //   (sender, tokenId, tokenURI) => {
+        //     console.log("event - new minted NFT");
+        //     fetchNFTCollection();
+        //   }
+        // );
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -153,7 +152,7 @@ const App = () => {
   const resetState = () => {
     setLinksObj(INITIAL_LINK_STATE);
     setName("");
-    setList("");
+    setReceiverAddress("");
     setImageView("");
   }
 
@@ -195,8 +194,7 @@ const App = () => {
       await client
         .store({
           name: `${name}: Soul token for friendship @ ETH Shanghai Hackthon 2022`,
-          description:
-            "Soul token sample. jhfnetboy",
+          description: "Soul token sample. jhfnetboy",
           external_url: "https://soul-token.io/3",
           image: "ipfs://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym",
           // traits: {
@@ -216,7 +214,8 @@ const App = () => {
           // Or run a local IPFS node (there's a desktop app)
           // This means manipulating the returned CID to configure it for a gateway...
           // Check gateways & their functionality here: https://ipfs.github.io/public-gateway-checker/
-          createImageView(metadata);
+
+          // createImageView(metadata);
           
           //we can also check the status of our data using this
           // const status = await client.status(metadata.ipnft);
@@ -367,17 +366,17 @@ const App = () => {
           signer
         );
 
-        let remainingNFTs = await connectedContract.remainingMintableNFTs();
-        setRemainingNFTs(remainingNFTs.toNumber()); //update state
+        // let remainingNFTs = await connectedContract.remainingMintableNFTs();
+        // setRemainingNFTs(remainingNFTs.toNumber()); //update state
 
-        let collection = await connectedContract.getNFTCollection();
-        setNftCollectionData(collection); //update state
-        console.log("collection", collection);
+        // let collection = await connectedContract.getNFTCollection();
+        // setNftCollectionData(collection); //update state
+        // console.log("collection", collection);
 
         /***
          * Going to put these in the view collection
          */
-        await createImageURLsForRetrieval(collection);
+        // await createImageURLsForRetrieval(collection);
 
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -392,7 +391,8 @@ const App = () => {
   return (
     <Layout connected={currentAccount === ""} connectWallet={connectWallet}>
       <>
-        <p className="sub-sub-text">{`Received Soul Bound Tokens: ${remainingNFTs}`}</p>
+        <p className="sub-sub-text">{`Received Soul Bound Tokens: `}</p>
+        {/* <p className="sub-sub-text">{`Received Soul Bound Tokens: ${remainingNFTs}`}</p> */}
         {transactionState !== INITIAL_TRANSACTION_STATE && <Status transactionState={transactionState}/>}
         {imageView &&
           !linksObj.etherscan && <Link link={imageView} description="See IPFS image link"/>}
@@ -403,7 +403,7 @@ const App = () => {
         ) : transactionState.loading ? (
           <div />
         ) : (
-          <MintNFTInput name={name} setName={setName} transactionState={transactionState} createNFTData={createNFTData}/>
+          <MintNFTInput name={name} setName={setName} receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} transactionState={transactionState} createNFTData={createNFTData}/>
         )}
         {recentlyMinted && <NFTViewer recentlyMinted={recentlyMinted}/>}
       </>
