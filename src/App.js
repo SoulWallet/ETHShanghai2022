@@ -171,19 +171,24 @@ const App = () => {
 
   /* Create the IPFS CID of the json data */
   const createNFTData = async () => {
-    console.log("saving to NFT storage");
+    console.log("saving to NFT storage...");
     resetState();
+    console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
       loading: "Saving NFT data to NFT.Storage...",
     });
+    console.log("tx state clear");
 
     // install it
     // Set Up the NFT.Storage Client
     const client = new NFTStorage({
       // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgxOTQ0NzgzOCwibmFtZSI6InRleHR2ZXJzZS10ZXh0In0.V2Qb3z5JIT9dqvksafgTFfVTV92Yx0upcODojhgMHKc",
+      // token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgxOTQ0NzgzOCwibmFtZSI6InRleHR2ZXJzZS10ZXh0In0.V2Qb3z5JIT9dqvksafgTFfVTV92Yx0upcODojhgMHKc",
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
     });
+    console.log(client)
+    console.log("client state ok");
 
     //lets load up this token with some metadata and our image and save it to NFT.storage
     //image contains any File or Blob you want to save
@@ -196,15 +201,12 @@ const App = () => {
           name: `${name}: Soul token for friendship @ ETH Shanghai Hackthon 2022`,
           description: "Soul token sample. jhfnetboy",
           external_url: "https://soul-token.io/3",
-          image: "ipfs://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym",
-          // traits: {
-          //   type: "1", 
-          // },
+          image: "ipfs://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym"
         })
         .then((metadata) => {
           setTransactionState({
             ...transactionState,
-            success: "Saved NFT data to NFT.Storage...!! We created an IPFS CID & made a Filecoin Storage Deal with one call!",
+            success: "Saved NFT data to NFT.Storage...!! ",
             loading: "",
           });
           console.log("metadata saved", metadata);
@@ -236,6 +238,7 @@ const App = () => {
 
   /* Mint the NFT on the eth blockchain */
   const askContractToMintNft = async (IPFSurl) => {
+    console.log("herer enter askContractToMintNft")
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
