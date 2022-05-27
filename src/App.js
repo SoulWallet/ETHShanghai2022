@@ -130,9 +130,36 @@ const App = () => {
         console.log("countByAddr:",countByAddr.toNumber());
         setRemainingNFTs(countByAddr.toNumber());
         //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
-        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, 0);
+        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);
         console.log("hashByEventID:",hashByEventID);
 
+        // get hash's propose detail
+        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
+        let hashPorposeDetail = await connectedContract.proposeInfo(hashByEventID);
+        console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
+        console.log("pure json: ",hashPorposeDetail[3]);
+
+        const client = new NFTStorage({
+          // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
+          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
+        });
+        console.log(client)
+        console.log("client state ok in read");
+    
+        try {
+          await client
+            .get("bafyreidboe37vrnxpqrr47i4ja5e7e2uljhofp3uosifltdjrrvfm7dxgy")
+            .then((metadata) => {
+              console.log("ipfs read content",metadata)
+              // do something
+            });
+        } catch (error) {
+          console.log(error)
+          console.log("Could not save NFT to NFT.Storage - Aborted read");
+        }
+
+
+        
         //approve the specify eventID's hash, to mint for currentAccount
         // let approveHash = await connectedContract.approvePropose(hashByEventID);
 
