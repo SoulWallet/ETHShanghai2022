@@ -17,7 +17,7 @@ const Header = () => {
       </a>
       <p className="header gradient-text">Soul Bound NFTs Collection</p>
       <p className="sub-text">
-        Soul NFTs for You to mint: 
+      We build Soul Bound Tokens Experiment with NFT!
       </p>
     </>
   );

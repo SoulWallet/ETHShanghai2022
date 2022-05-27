@@ -1,13 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-/* ERC71 based Solidity Contract Interface */
 import SoulToken from "./utils/SoulToken.json";
-
-/* NFT.Storage import for creating an IPFS CID & storing with Filecoin */
 import { NFTStorage, File } from "nft.storage";
 import { baseSVG } from "./utils/BaseSVG";
-
-/* Javascript Lib for evm-compatible blockchain contracts */
 import { ethers } from "ethers";
 
 /* UI Components & Style*/
@@ -34,7 +29,6 @@ const INITIAL_TRANSACTION_STATE = {
   warning: "",
 };
 
-// const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 // set constant contract address cause of server in fleek has no .env
 const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
@@ -46,7 +40,7 @@ const App = () => {
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
   const [arrNFT, setArrNFT] = useState([]); //NFT input data
-  const [NFTsToMint, getNFTsToMint] = useState("");
+  const [NFTsToMint, setNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
   const [remainingNFTs, setRemainingNFTs] = useState("");
@@ -127,7 +121,7 @@ const App = () => {
         // get currentAccount the number of NFT to mint
         let countByAddr = await connectedContract.pendingConfirmCount(currentAccount);
         console.log("countByAddr:",countByAddr.toNumber());
-        setRemainingNFTs(countByAddr.toNumber());
+        setNFTsToMint(countByAddr.toNumber());
         //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
         let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);
         console.log("hashByEventID:",hashByEventID);
@@ -418,8 +412,8 @@ const App = () => {
           signer
         );
 
-        let remainingNFTs = await connectedContract.pendingConfirmCount(currentAccount);
-        setRemainingNFTs(remainingNFTs.toNumber()); //update state
+        let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
+        setNFTsToMint(NFTsToMint.toNumber()); //update state
 
 
         /// @notice mapping propose Id to propose detail
@@ -476,9 +470,7 @@ const App = () => {
   return (
     <Layout connected={currentAccount === ""} connectWallet={connectWallet}>
       <>
-        <p className="sub-sub-text">{`Received Soul Bound Tokens: `}</p>
-        {/* <p className="sub-sub-text">{`Received Soul Bound Tokens: ${remainingNFTs}`}</p> */}
-
+        <p className="sub-sub-text">{`Soul Bound Tokens to be Mint: ${NFTsToMint}`}</p>
         {transactionState !== INITIAL_TRANSACTION_STATE && <Status transactionState={transactionState}/>}
         {imageView &&
           !linksObj.etherscan && <Link link={imageView} description="See IPFS image link"/>}
