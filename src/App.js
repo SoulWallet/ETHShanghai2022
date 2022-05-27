@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 /* ERC71 based Solidity Contract Interface */
-// import SBTsHack from "./utils/SBTsHack.json";
 import SoulToken from "./utils/SoulToken.json";
 
 /* NFT.Storage import for creating an IPFS CID & storing with Filecoin */
@@ -39,6 +38,7 @@ const INITIAL_TRANSACTION_STATE = {
 // set constant contract address cause of server in fleek has no .env
 const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
+
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
@@ -478,6 +478,7 @@ const App = () => {
       <>
         <p className="sub-sub-text">{`Received Soul Bound Tokens: `}</p>
         {/* <p className="sub-sub-text">{`Received Soul Bound Tokens: ${remainingNFTs}`}</p> */}
+
         {transactionState !== INITIAL_TRANSACTION_STATE && <Status transactionState={transactionState}/>}
         {imageView &&
           !linksObj.etherscan && <Link link={imageView} description="See IPFS image link"/>}
@@ -493,7 +494,7 @@ const App = () => {
           arrNFT={arrNFT} setArrNFT={setArrNFT} 
           selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
-          description={description} setDescription={setDescription} 
+          // description={description} setDescription={setDescription} 
 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>

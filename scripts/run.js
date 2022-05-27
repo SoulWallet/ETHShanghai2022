@@ -7,7 +7,7 @@
 
 const main = async () => {
   const nftContractFactory = await hre.ethers.getContractFactory(
-    "SBTsHack"
+    "SoulToken"
   );
   const nftContract = await nftContractFactory.deploy();
   await nftContract.deployed();
