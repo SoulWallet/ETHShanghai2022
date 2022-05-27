@@ -45,9 +45,8 @@ const App = () => {
   const [name, setName] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
-  
+  const [arrNFT, setArrNFT] = useState([]); //NFT input data
   const [NFTsToMint, getNFTsToMint] = useState("");
-  // banlanceOf?  owner? OwnerOf?? pendingConfirmCount(addr)
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
   const [remainingNFTs, setRemainingNFTs] = useState("");
@@ -251,11 +250,9 @@ const App = () => {
           name: `${name}: Soul token for friendship @ ETH Shanghai Hackthon 2022`,
           description: "Soul token sample. jhfnetboy",
           external_url: "https://soul-token.io/3",
-          // image: "ipfs://bafybeicnnzqiizbwz5c5kger2tzedc7g4q5tj6onqennicwhjni6mk3bym"
           image: new File(
             [
-              `${baseSVG}${name}</text>
-      </svg>`,
+              `${baseSVG}${name}</text></svg>`,
             ],
             `SoulTokens.svg`,
             {
@@ -320,7 +317,9 @@ const App = () => {
         );
 
         console.log("Opening wallet");
-        let nftTxn = await connectedContract.sendRequest(receiverAddress, 1, true, IPFSurl);
+        // sendRequest
+        // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
+        let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
             // ) ipfs://bafkreidgmyqs42h27e3k6ojws4rjufmcpw5erhlyxvy2buuedvtppngs24
 
         connectedContract.on(
@@ -489,7 +488,15 @@ const App = () => {
         ) : transactionState.loading ? (
           <div />
         ) : (
-          <MintNFTInput name={name} setName={setName} selectEventID={selectEventID} setSelectEventID={setSelectEventID} receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} transactionState={transactionState} createNFTData={createNFTData}/>
+          <MintNFTInput 
+          name={name} setName={setName} 
+          arrNFT={arrNFT} setArrNFT={setArrNFT} 
+          selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
+          receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
+          description={description} setDescription={setDescription} 
+
+          transactionState={transactionState} 
+          createNFTData={createNFTData}/>
         )}
         {recentlyMinted && <NFTViewer recentlyMinted={recentlyMinted}/>}
       </>
