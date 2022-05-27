@@ -136,24 +136,27 @@ const App = () => {
         // get hash's propose detail
         // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
         let hashPorposeDetail = await connectedContract.proposeInfo(hashByEventID);
-        // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
-        console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
-        let cidTemp = hashPorposeDetail[3].split('/')[2];
 
-        console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+        // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
+        let cidTemp = hashPorposeDetail[3].split('/')[2];
+        console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
         let nameJson = hashPorposeDetail[3].split('/')[3];
+        console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+        
         let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
         console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
+        let jsonData = {};
         await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`}).then(response=>{
           console.log("jsonMeta:", response.data);
+          jsonData = response.data;
         });
-        // let nameNFT = response.data.name;
-        // let descriptionNFT = response.data.description;
-        // let external_url = response.data.external_url;
-        // let imageUrl = ipfsBaseGate + response.data.image.split('/')[2] +'/'+response.data.image.split('/')[3];
-        // console.log("imageUrl:",imageUrl);
-        // let imageNFT = await  axios({method: 'get',url: `${response.data.image}`});
-        // console.log("image:",imageNFT);
+        let nameNFT = jsonData.name;
+        let descriptionNFT = jsonData.description;
+        let external_url = jsonData.external_url;
+        let imageUrl = ipfsBaseGate + jsonData.image.split('/')[2] +'/'+jsonData.image.split('/')[3];
+        console.log("imageUrl:",imageUrl);
+        let imageNFT = await  axios({method: 'get',url: `${jsonData.image}`});
+        console.log("image:",imageNFT);
 
         
 
