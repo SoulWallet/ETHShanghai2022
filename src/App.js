@@ -44,6 +44,8 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
+  const [selectEventID, setSelectEventID] = useState("");
+  
   const [NFTsToMint, getNFTsToMint] = useState("");
   // banlanceOf?  owner? OwnerOf?? pendingConfirmCount(addr)
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
@@ -64,6 +66,7 @@ const App = () => {
   /* If a wallet is connected, do some setup */
   useEffect(() => {
     setUpEventListener();
+    setSelectEventID(0);
     fetchNFTCollection();
   }, [currentAccount]);
 
@@ -376,9 +379,42 @@ const App = () => {
         let remainingNFTs = await connectedContract.pendingConfirmCount(currentAccount);
         setRemainingNFTs(remainingNFTs.toNumber()); //update state
 
-        // let collection = await connectedContract.getNFTCollection();
-        // setNftCollectionData(collection); //update state
-        // console.log("collection", collection);
+
+        /// @notice mapping propose Id to propose detail
+        // mapping(bytes32 => Propose) public proposeInfo;
+        /// @notice get list of propose Ids created By address
+        // mapping(address => bytes32[]) public proposeIdByAddr;
+         
+
+        // get currentAccount's propose
+        // proposeIdByAddr[msg.sender].push(proposeHash);
+        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount, selectEventID);
+        console.log("Propose I have:",currentPropose)
+
+        // get hash's propose detail
+        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
+        let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
+        console.log("Specify propose hash detail:",hashPorposeDetail);
+        
+
+     // struct myNFT {
+      //     address owner;
+      //     string tokenURI;
+      //     uint256 tokenId;
+      // }
+      // collection = myNFT[]
+        let collection = currentPropose;
+        setNftCollectionData(collection); //update state
+        console.log("collection", collection);
+
+      //   struct Propose {
+      //     address from;
+      //     address to;
+      //     uint256 eventId;
+      //     string tokenURI;
+      //     bool acceptStatus;
+      //     bool mutualMint;
+      // }
 
         /***
          * Going to put these in the view collection
@@ -410,7 +446,7 @@ const App = () => {
         ) : transactionState.loading ? (
           <div />
         ) : (
-          <MintNFTInput name={name} setName={setName} receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} transactionState={transactionState} createNFTData={createNFTData}/>
+          <MintNFTInput name={name} setName={setName} selectEventID={selectEventID} setSelectEventID={setSelectEventID} receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} transactionState={transactionState} createNFTData={createNFTData}/>
         )}
         {recentlyMinted && <NFTViewer recentlyMinted={recentlyMinted}/>}
       </>
