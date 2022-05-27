@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 /* ERC71 based Solidity Contract Interface */
 // import SBTsHack from "./utils/SBTsHack.json";
 import SoulToken from "./utils/SoulToken.json";
@@ -38,7 +38,7 @@ const INITIAL_TRANSACTION_STATE = {
 // const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 // set constant contract address cause of server in fleek has no .env
 const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
-
+const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
@@ -136,35 +136,48 @@ const App = () => {
         // get hash's propose detail
         // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
         let hashPorposeDetail = await connectedContract.proposeInfo(hashByEventID);
-        console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
-        console.log("pure json: ",hashPorposeDetail[3]);
+        // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
+        console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
+        let cidTemp = hashPorposeDetail[3].split('/')[2];
 
-        const client = new NFTStorage({
-          // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
-          token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
+        console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+        let nameJson = hashPorposeDetail[3].split('/')[3];
+        let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
+        console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
+        await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`}).then(response=>{
+          console.log("jsonMeta:", response.data);
         });
-        console.log(client)
-        console.log("client state ok in read");
-    
-        try {
-          await client
-            .get("bafyreidboe37vrnxpqrr47i4ja5e7e2uljhofp3uosifltdjrrvfm7dxgy")
-            .then((metadata) => {
-              console.log("ipfs read content",metadata)
-              // do something
-            });
-        } catch (error) {
-          console.log(error)
-          console.log("Could not save NFT to NFT.Storage - Aborted read");
-        }
-
+        // let nameNFT = response.data.name;
+        // let descriptionNFT = response.data.description;
+        // let external_url = response.data.external_url;
+        // let imageUrl = ipfsBaseGate + response.data.image.split('/')[2] +'/'+response.data.image.split('/')[3];
+        // console.log("imageUrl:",imageUrl);
+        // let imageNFT = await  axios({method: 'get',url: `${response.data.image}`});
+        // console.log("image:",imageNFT);
 
         
-        //approve the specify eventID's hash, to mint for currentAccount
+
+
+        //approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
         // let approveHash = await connectedContract.approvePropose(hashByEventID);
 
-        // for test purpose, we send to currentAccount a nft to be mint again
-        // todo
+        // const client = new NFTStorage({
+        //   // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
+        //   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
+        // });
+        // console.log(client);
+        // console.log("client state ok in read");
+        // try {
+        //   await client
+        //     .get("bafyreidboe37vrnxpqrr47i4ja5e7e2uljhofp3uosifltdjrrvfm7dxgy")
+        //     .then((metadata) => {
+        //       console.log("ipfs read content",metadata)
+        //       // do something
+        //     });
+        // } catch (error) {
+        //   console.log(error)
+        //   console.log("Could not save NFT to NFT.Storage - Aborted read");
+        // }
         
        
         connectedContract.on(
