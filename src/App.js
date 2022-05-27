@@ -131,21 +131,19 @@ const App = () => {
         console.log("hashByEventID:",hashByEventID);
 
         //approve the specify eventID's hash, to mint for currentAccount
-        let approveHash = await connectedContract.approvePropose(hashByEventID);
+        // let approveHash = await connectedContract.approvePropose(hashByEventID);
 
         // for test purpose, we send to currentAccount a nft to be mint again
-        
-
-
+        // todo
         
        
-        // connectedContract.on(
-        //   "NewFilecoinNFTMinted",
-        //   (sender, tokenId, tokenURI) => {
-        //     console.log("event - new minted NFT");
-        //     fetchNFTCollection();
-        //   }
-        // );
+        connectedContract.on(
+          "MakePropose",
+          (sender, party, proposeHash, eventId) => {
+            console.log(sender, " build a eventID=",eventId," nft for address: ",party,",hash is:  ",proposeHash);
+            fetchNFTCollection();
+          }
+        );
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -281,8 +279,8 @@ const App = () => {
 
         connectedContract.on(
           "MakePropose",
-          (from, to,proposeId, eventId) => {
-            console.log("event listener", from, to, proposeId, eventId.toNumber());
+          (from, to,proposeHash, eventId) => {
+            console.log(from, " build a eventID=",eventId," nft for address: ",to,",hash is:  ",proposeHash);
             setLinksObj({
               ...linksObj,
               opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
@@ -375,8 +373,8 @@ const App = () => {
           signer
         );
 
-        // let remainingNFTs = await connectedContract.remainingMintableNFTs();
-        // setRemainingNFTs(remainingNFTs.toNumber()); //update state
+        let remainingNFTs = await connectedContract.pendingConfirmCount(currentAccount);
+        setRemainingNFTs(remainingNFTs.toNumber()); //update state
 
         // let collection = await connectedContract.getNFTCollection();
         // setNftCollectionData(collection); //update state
