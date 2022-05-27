@@ -44,10 +44,11 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
-  
+  const [NFTsToMint, getNFTsToMint] = useState("");
+  // banlanceOf?  owner? OwnerOf?? pendingConfirmCount(addr)
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
-  // const [remainingNFTs, setRemainingNFTs] = useState("");
+  const [remainingNFTs, setRemainingNFTs] = useState("");
   const [nftCollectionData, setNftCollectionData] = useState("");
   const [recentlyMinted, setRecentlyMinted] = useState("");
   const [transactionState, setTransactionState] = useState(
@@ -82,19 +83,10 @@ const App = () => {
 
     if (accounts.length !== 0) {
       setCurrentAccount(accounts[0]);
+      console.log("account:",currentAccount);
     } else {
       console.log("No authorized account found");
     }
-
-    //TODO: make sure on right network or change programatically
-    // let chainId = await ethereum.request({ method: 'eth_chainId' });
-    // console.log("Connected to chain " + chainId);
-
-    // // String, hex code of the chainId of the Rinkebey test network
-    // const rinkebyChainId = "0x4";
-    // if (chainId !== rinkebyChainId) {
-    //   alert("You are not connected to the Rinkeby Test Network!");
-    // }
   };
 
   /* Connect a wallet */
@@ -129,10 +121,24 @@ const App = () => {
           SoulToken.abi,
           signer
         );
+        
+        // get currentAccount the number of NFT to mint
+        let countByAddr = await connectedContract.pendingConfirmCount(currentAccount);
+        console.log("countByAddr:",countByAddr.toNumber());
+        setRemainingNFTs(countByAddr.toNumber());
+        //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
+        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, 0);
+        console.log("hashByEventID:",hashByEventID);
 
-        // connectedContract.on("RemainingMintableNFTChange", (remainingNFTs) => {
-        //   setRemainingNFTs(remainingNFTs);
-        // });
+        //approve the specify eventID's hash, to mint for currentAccount
+        let approveHash = await connectedContract.approvePropose(hashByEventID);
+
+        // for test purpose, we send to currentAccount a nft to be mint again
+        
+
+
+        
+       
         // connectedContract.on(
         //   "NewFilecoinNFTMinted",
         //   (sender, tokenId, tokenURI) => {
@@ -144,7 +150,7 @@ const App = () => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -271,11 +277,6 @@ const App = () => {
 
         console.log("Opening wallet");
         let nftTxn = await connectedContract.sendRequest(receiverAddress, 1, true, IPFSurl);
-            //   function sendRequest(
-            //     address _party,
-            //     uint256 _eventId,
-            //     bool _mutualMint,
-            //     string memory _tokenURI
             // ) ipfs://bafkreidgmyqs42h27e3k6ojws4rjufmcpw5erhlyxvy2buuedvtppngs24
 
         connectedContract.on(
@@ -290,13 +291,6 @@ const App = () => {
             });
           }
         );
-
-      //   event MakePropose(
-      //     address indexed from,
-      //     address indexed to,
-      //     bytes32 proposeId,
-      //     uint256 eventId
-      // );
 
         //SHOULD UPDATE IMAGELINK to returned value
         await nftTxn.wait();
