@@ -5,7 +5,19 @@ const MintNFTInput = ({...props}) => {
     let {name, setName, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
-        <p>
+      <hr/>
+        <p>  <br />
+        <p className="sub-text gradient-text"> Build a Soul Bound Realtions:</p> <br />       
+          <select
+          className="input"
+          placeholder="Select Type"
+          onChange={(e) => console.log(e.target.value)}
+          >
+            <option>Marriage
+            </option>
+            <option>Citizenship
+            </option> 
+          </select>&nsp
           <input
             className="input"
             placeholder="Enter Soul Token Name"
@@ -24,16 +36,8 @@ const MintNFTInput = ({...props}) => {
             value={receiverAddress}
             onChange={(e) => setReceiverAddress(e.target.value)}
           /><br /> <br />
-          <select
-          className="input"
-          placeholder="Select Type"
-          onChange={(e) => console.log(e.target.value)}
-          >
-            <option>Marriage
-            </option>
-            <option>Citizenship
-            </option> 
-          </select>
+
+
 
 
           {/* _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string) */}
