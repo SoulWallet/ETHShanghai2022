@@ -11,7 +11,7 @@ const Header = () => {
       >
         <img
           alt="ETH Shanghai 2022 NFTHack Logo"
-          style={{ height: "200px" }}
+          style={{ height: "150px" }}
           src={nftHackLogo}
         ></img>
       </a>
