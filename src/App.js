@@ -223,11 +223,7 @@ const App = () => {
     });
     console.log("tx state clear");
 
-    // install it
-    // Set Up the NFT.Storage Client
     const client = new NFTStorage({
-      // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
-      // token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgxOTQ0NzgzOCwibmFtZSI6InRleHR2ZXJzZS10ZXh0In0.V2Qb3z5JIT9dqvksafgTFfVTV92Yx0upcODojhgMHKc",
       token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
     });
     console.log(client)
@@ -280,9 +276,8 @@ const App = () => {
     }
   };
 
-  /* Mint the NFT on the eth blockchain */
   const askContractToMintNft = async (IPFSurl) => {
-    console.log("herer enter askContractToMintNft")
+    // console.log("herer enter askContractToMintNft")
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
@@ -305,7 +300,6 @@ const App = () => {
         // sendRequest
         // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
         let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
-            // ) ipfs://bafkreidgmyqs42h27e3k6ojws4rjufmcpw5erhlyxvy2buuedvtppngs24
 
         connectedContract.on(
           "MakePropose",
@@ -414,7 +408,6 @@ const App = () => {
          
 
         // get currentAccount's propose
-
         // proposeIdByAddr[msg.sender].push(proposeHash);
         let currentPropose = await connectedContract.proposeIdByAddr(currentAccount);
         console.log("Propose I have:",currentPropose)
@@ -424,24 +417,9 @@ const App = () => {
         let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
         console.log("Specify propose hash detail:",hashPorposeDetail);
         
-     // struct myNFT {
-      //     address owner;
-      //     string tokenURI;
-      //     uint256 tokenId;
-      // }
-      // collection = myNFT[]
         let collection = currentPropose;
         setNftCollectionData(collection); //update state
         console.log("collection", collection);
-
-      //   struct Propose {
-      //     address from;
-      //     address to;
-      //     uint256 eventId;
-      //     string tokenURI;
-      //     bool acceptStatus;
-      //     bool mutualMint;
-      // }
 
         /***
          * Going to put these in the view collection
@@ -477,7 +455,6 @@ const App = () => {
           arrNFT={arrNFT} setArrNFT={setArrNFT} 
           selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
-          // description={description} setDescription={setDescription} 
 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
