@@ -58,10 +58,12 @@ const MintNFTInput = ({...props}) => {
       setValue(newValue);
     };
     const [checked, setChecked] = React.useState(true);
-
+    const [selectDI, setSelectDI] = React.useState(true);
     const handleChange2 = (event) => {
       setChecked(event.target.checked);
+      event.target.checked ? setSelectDI(true) : setSelectDI(false);
       console.log("checked:",event.target.checked)
+
     };
 
     let {name, setName, currentAccount, NFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;

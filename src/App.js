@@ -97,7 +97,7 @@ const App = () => {
       const accounts = await ethereum.request({
         method: "eth_requestAccounts",
       });
-      console.log("Connected", accounts[0]);
+      console.log("Connected:", accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
       console.log(error);
@@ -338,6 +338,7 @@ const App = () => {
 
   /* Helper function - manipulating the returned CID into a http link using IPFS gateway */
   const createIPFSgatewayLink = (el) => {
+    console.log("el",el);
     let link = el[1].split("/");
     let fetchURL = `https://${link[2]}.ipfs.dweb.link/${link[3]}`;
     return fetchURL;
@@ -348,6 +349,7 @@ const App = () => {
     to display the images in the UI 
   */
   const createImageURLsForRetrieval = async (collection) => {
+    console.log("getImgUrl:",collection);
     let dataCollection = collection
     .slice()
     .reverse()
@@ -403,30 +405,25 @@ const App = () => {
         console.log("NFTsToMint:",NFTsToMint?.toNumber());
 
         // get currentAccount's propose
-        // proposeIdByAddr[msg.sender].push(proposeHash);
-        // let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
-        // console.log("Propose I have:",currentPropose)
-
-        // get hash's propose detail
-        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
-        // let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
-        // console.log("Specify propose hash detail:",hashPorposeDetail);
+        let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
+        // console.log("Propose I have:",currentPropose);
         
-        // let collection = currentPropose;
-        // setNftCollectionData(collection); //update state
-        // console.log("collection", collection);
-
-        /***
-         * Going to put these in the view collection
-         */
-        // await createImageURLsForRetrieval(collection);
-
+        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
+        const getImagePrepare = async _ => {
+          currentPropose.map(async(item,index)=> {
+            const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
+            console.log("Specify propose hash detail:",hashPorposeDetail);
+            setNftCollectionData(hashPorposeDetail); //update state
+            await createImageURLsForRetrieval(hashPorposeDetail);
+          }) 
+        }
+        
       } else {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log("error");
-      // console.log(error);
+      // console.log("error");
+      console.log(error);
     }
   };
 
