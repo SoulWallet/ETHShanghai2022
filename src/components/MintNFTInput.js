@@ -64,7 +64,7 @@ const MintNFTInput = ({...props}) => {
       console.log("checked:",event.target.checked)
     };
 
-    let {name, setName, NFTsToMint, setNFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
+    let {name, setName, currentAccount, NFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
     <hr/>
@@ -107,7 +107,13 @@ const MintNFTInput = ({...props}) => {
             </option>
             <option>Citizenship
             </option> 
-          </select> 
+          </select> &nbsp;
+          <Checkbox
+        defaultChecked
+        color="primary"
+        onChange={(e) => handleChange2(e)}
+        inputProps={{ 'aria-label': 'secondary checkbox' }}
+      /> <label>doubleIssuance</label>
           <br /> <br />
           <input
             className="input"
@@ -138,14 +144,18 @@ const MintNFTInput = ({...props}) => {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />  &nbsp;
-      <Checkbox
-        defaultChecked
-        color="primary"
-        onChange={(e) => handleChange2(e)}
-        inputProps={{ 'aria-label': 'secondary checkbox' }}
-      /> <label>doubleIssuance</label>
-      <br /> <br />
-
+      <input
+            className="input"
+            placeholder="Issuer"
+            color="secondary"
+            type="text"
+            // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
+            required
+            disabled="disabled"
+            value={currentAccount}
+            onChange={(e) => setName(e.target.value)}
+          />  &nbsp;
+          <br /> <br />
           {/* _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string) */}
           {/* input area end */}
         
