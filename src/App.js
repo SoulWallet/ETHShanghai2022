@@ -403,16 +403,9 @@ const App = () => {
         setNFTsToMint(NFTsToMint.toNumber()); //update state
         console.log("NFTsToMint:",NFTsToMint.toNumber());
 
-
-        /// @notice mapping propose Id to propose detail
-        // mapping(bytes32 => Propose) public proposeInfo;
-        /// @notice get list of propose Ids created By address
-        // mapping(address => bytes32[]) public proposeIdByAddr;
-         
-
         // get currentAccount's propose
         // proposeIdByAddr[msg.sender].push(proposeHash);
-        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount);
+        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount,4);
         console.log("Propose I have:",currentPropose)
 
         // get hash's propose detail
@@ -433,8 +426,8 @@ const App = () => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log("error");
-      // console.log(error);
+      // console.log("error");
+      console.log(error);
     }
   };
 

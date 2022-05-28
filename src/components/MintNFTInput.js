@@ -72,7 +72,9 @@ const MintNFTInput = ({...props}) => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Item One
+        {/* history begin */}
+        
+        {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
       {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
@@ -124,7 +126,7 @@ const MintNFTInput = ({...props}) => {
         >
           Mint NFT
         </button>
-{/* content end*/}
+      {/* content end*/}
       </TabPanel>
     </div>
 
