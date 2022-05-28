@@ -457,7 +457,6 @@ const App = () => {
           arrNFT={arrNFT} setArrNFT={setArrNFT} 
           selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
-
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
           
