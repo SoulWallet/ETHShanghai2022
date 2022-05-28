@@ -263,20 +263,11 @@ const App = () => {
           });
           console.log("metadata saved", metadata);
 
-          // To view the data we just saved in the browser we need to use an IPFS http bridge
-          // Or Brave Browser which has IPFS integration built into it
-          // Or run a local IPFS node (there's a desktop app)
-          // This means manipulating the returned CID to configure it for a gateway...
-          // Check gateways & their functionality here: https://ipfs.github.io/public-gateway-checker/
-
-          // createImageView(metadata);
+          // createImageView(metadata);  //todo
           
-          //we can also check the status of our data using this
           // const status = await client.status(metadata.ipnft);
           // console.log("status", status);
 
-          // Now that we have a CID and our data is stored on Filecoin, 
-          // - we'll mint the NFT with the token data (and IPFS CID)
           askContractToMintNft(metadata.url);
         });
     } catch (error) {
