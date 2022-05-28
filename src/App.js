@@ -123,6 +123,7 @@ const App = () => {
         let countByAddr = await connectedContract.pendingConfirmCount(currentAccount);
         console.log("countByAddr:",countByAddr.toNumber());
         setNFTsToMint(countByAddr.toNumber());
+        console.log("NFTsToMint:",NFTsToMint.toNumber());
         //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
         let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);//0,1,2,3,4
         console.log("hashByEventID:",hashByEventID);
@@ -400,6 +401,7 @@ const App = () => {
 
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
+        console.log("NFTsToMint:",NFTsToMint.toNumber());
 
 
         /// @notice mapping propose Id to propose detail
@@ -441,7 +443,6 @@ const App = () => {
   return (
     <Layout connected={currentAccount === ""} connectWallet={connectWallet}>
       <>
-        <p className="sub-sub-text">{`Soul Bound Tokens to be Mint: ${NFTsToMint}`}</p>
         {transactionState !== INITIAL_TRANSACTION_STATE && <Status transactionState={transactionState}/>}
         {imageView &&
           !linksObj.etherscan && <Link link={imageView} description="See IPFS image link"/>}
@@ -455,9 +456,9 @@ const App = () => {
           <MintNFTInput 
           name={name} setName={setName} 
           arrNFT={arrNFT} setArrNFT={setArrNFT} 
+          NFTsToMint={NFTsToMint} setNFTsToMint={NFTsToMint}
           selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
-
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
           
