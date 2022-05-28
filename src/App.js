@@ -123,7 +123,7 @@ const App = () => {
         console.log("countByAddr:",countByAddr.toNumber());
         setNFTsToMint(countByAddr.toNumber());
         //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
-        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);
+        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);//0,1,2,3,4
         console.log("hashByEventID:",hashByEventID);
 
         // get hash's propose detail
@@ -154,7 +154,7 @@ const App = () => {
         
 
 
-        //approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
+        // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
         // let approveHash = await connectedContract.approvePropose(hashByEventID);
 
         // const client = new NFTStorage({
@@ -423,8 +423,9 @@ const App = () => {
          
 
         // get currentAccount's propose
+
         // proposeIdByAddr[msg.sender].push(proposeHash);
-        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount, selectEventID);
+        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount);
         console.log("Propose I have:",currentPropose)
 
         // get hash's propose detail
@@ -432,7 +433,6 @@ const App = () => {
         let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
         console.log("Specify propose hash detail:",hashPorposeDetail);
         
-
      // struct myNFT {
       //     address owner;
       //     string tokenURI;
