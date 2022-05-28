@@ -9,7 +9,6 @@ import { ethers } from "ethers";
 import "./styles/App.css";
 import Layout from "./components/Layout";
 import MintNFTInput from "./components/MintNFTInput";
-import NewInput from "./components/NewInput";
 import Status from "./components/Status";
 import ImagePreview from "./components/ImagePreview";
 import Link from "./components/Link";
@@ -31,7 +30,7 @@ const INITIAL_TRANSACTION_STATE = {
 };
 
 // set constant contract address cause of server in fleek has no .env
-const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
+const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
 
@@ -401,21 +400,21 @@ const App = () => {
 
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
-        console.log("NFTsToMint:",NFTsToMint.toNumber());
+        console.log("NFTsToMint:",NFTsToMint?.toNumber());
 
         // get currentAccount's propose
         // proposeIdByAddr[msg.sender].push(proposeHash);
-        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount,4);
-        console.log("Propose I have:",currentPropose)
+        // let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
+        // console.log("Propose I have:",currentPropose)
 
         // get hash's propose detail
         // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
-        let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
-        console.log("Specify propose hash detail:",hashPorposeDetail);
+        // let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
+        // console.log("Specify propose hash detail:",hashPorposeDetail);
         
-        let collection = currentPropose;
-        setNftCollectionData(collection); //update state
-        console.log("collection", collection);
+        // let collection = currentPropose;
+        // setNftCollectionData(collection); //update state
+        // console.log("collection", collection);
 
         /***
          * Going to put these in the view collection
@@ -426,8 +425,8 @@ const App = () => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      // console.log("error");
-      console.log(error);
+      console.log("error");
+      // console.log(error);
     }
   };
 

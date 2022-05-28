@@ -73,16 +73,24 @@ const MintNFTInput = ({...props}) => {
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        
+
         {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
       {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
       </TabPanel>
       <TabPanel value={value} index={2}>
+
+
+
         {/* content begin */}
      
-        <p>  <br />
+       
+        {/* input area begin */}
+
+        <Box bgcolor="info.main">
+          test
+        </Box>
         <a className="sub-text gradient-text"> Build a Soul Bound Realtions:</a> <br />       
           <select
           className="input"
@@ -93,16 +101,17 @@ const MintNFTInput = ({...props}) => {
             </option>
             <option>Citizenship
             </option> 
-          </select>&nsp
+          </select>
           <input
             className="input"
             placeholder="Enter Soul Token Name"
+            color="secondary"
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-          /> &nsp
+          /> 
           <input
             className="input"
             placeholder="Enter receiver address "
@@ -113,8 +122,8 @@ const MintNFTInput = ({...props}) => {
             onChange={(e) => setReceiverAddress(e.target.value)}
           /><br /> <br />
           {/* _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string) */}
-
-        </p>
+          {/* input area end */}
+        
         <button
           onClick={createNFTData}
           className={
@@ -124,19 +133,13 @@ const MintNFTInput = ({...props}) => {
           }
           disabled={!name || transactionState.loading}
         >
-          Mint NFT
+          Create Realtion Propose
         </button>
       {/* content end*/}
       </TabPanel>
     </div>
 
     {/* tab end */}
-
-
-
-
-
-
 
       </div>
     )
