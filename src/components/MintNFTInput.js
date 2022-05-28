@@ -6,6 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Checkbox from '@material-ui/core/Checkbox';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,6 +57,12 @@ const MintNFTInput = ({...props}) => {
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+    const [checked, setChecked] = React.useState(true);
+
+    const handleChange2 = (event) => {
+      setChecked(event.target.checked);
+      console.log("checked:",event.target.checked)
+    };
 
     let {name, setName, NFTsToMint, setNFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
     return (
@@ -89,9 +96,8 @@ const MintNFTInput = ({...props}) => {
         {/* input area begin */}
 
         <Box bgcolor="info.main">
-          test
-        </Box>
-        <a className="sub-text gradient-text"> Build a Soul Bound Realtions:</a> <br />       
+        <br /> <br />
+        {/* <a className="sub-text gradient-text"> Build a Soul Bound Realtions:</a> <br />        */}
           <select
           className="input"
           placeholder="Select Type"
@@ -101,7 +107,8 @@ const MintNFTInput = ({...props}) => {
             </option>
             <option>Citizenship
             </option> 
-          </select>
+          </select> 
+          <br /> <br />
           <input
             className="input"
             placeholder="Enter Soul Token Name"
@@ -111,7 +118,7 @@ const MintNFTInput = ({...props}) => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-          /> 
+          />  &nbsp;
           <input
             className="input"
             placeholder="Enter receiver address "
@@ -121,6 +128,24 @@ const MintNFTInput = ({...props}) => {
             value={receiverAddress}
             onChange={(e) => setReceiverAddress(e.target.value)}
           /><br /> <br />
+          <input
+            className="input"
+            placeholder="Enter description"
+            color="secondary"
+            type="text"
+            // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />  &nbsp;
+      <Checkbox
+        defaultChecked
+        color="primary"
+        onChange={(e) => handleChange2(e)}
+        inputProps={{ 'aria-label': 'secondary checkbox' }}
+      /> <label>doubleIssuance</label>
+      <br /> <br />
+
           {/* _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string) */}
           {/* input area end */}
         
@@ -135,6 +160,7 @@ const MintNFTInput = ({...props}) => {
         >
           Create Realtion Propose
         </button>
+        </Box>
       {/* content end*/}
       </TabPanel>
     </div>
