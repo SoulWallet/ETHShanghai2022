@@ -155,7 +155,7 @@ const App = () => {
 
 
         // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
-        // let approveHash = await connectedContract.approvePropose(hashByEventID);
+        let approveHash = await connectedContract.approvePropose(hashByEventID);
 
         // const client = new NFTStorage({
         //   // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
@@ -430,7 +430,8 @@ const App = () => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log(error);
+      console.log("error");
+      // console.log(error);
     }
   };
 
