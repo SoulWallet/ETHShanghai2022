@@ -15,9 +15,10 @@ const Header = () => {
           src={nftHackLogo}
         ></img>
       </a>
-      <p className="header gradient-text">Soul Bound NFTs Collection</p>
+      <p className="header gradient-text">Welcome to Proof of Soul! </p>
       <p className="sub-text">
-      We build Soul Bound Tokens Experiment with NFT!
+PoS is a permissionliss soul bound token issue/mint protocol. <br/>
+You’re welcome to issue souldbound Token to your lover, friends and community to show your love!
       </p>
     </>
   );

@@ -9,6 +9,8 @@ import { ethers } from "ethers";
 import "./styles/App.css";
 import Layout from "./components/Layout";
 import MintNFTInput from "./components/MintNFTInput";
+import Tabs from "./components/Tabs";
+
 import Status from "./components/Status";
 import ImagePreview from "./components/ImagePreview";
 import Link from "./components/Link";
