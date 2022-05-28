@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-/* ERC71 based Solidity Contract Interface */
 import SoulToken from "./utils/SoulToken.json";
-
-/* NFT.Storage import for creating an IPFS CID & storing with Filecoin */
 import { NFTStorage, File } from "nft.storage";
 import { baseSVG } from "./utils/BaseSVG";
-
-/* Javascript Lib for evm-compatible blockchain contracts */
 import { ethers } from "ethers";
 
 /* UI Components & Style*/
 import "./styles/App.css";
 import Layout from "./components/Layout";
 import MintNFTInput from "./components/MintNFTInput";
+import NewInput from "./components/NewInput";
 import Status from "./components/Status";
 import ImagePreview from "./components/ImagePreview";
 import Link from "./components/Link";
@@ -34,7 +30,6 @@ const INITIAL_TRANSACTION_STATE = {
   warning: "",
 };
 
-// const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 // set constant contract address cause of server in fleek has no .env
 const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
@@ -46,7 +41,7 @@ const App = () => {
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
   const [arrNFT, setArrNFT] = useState([]); //NFT input data
-  const [NFTsToMint, getNFTsToMint] = useState("");
+  const [NFTsToMint, setNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
   const [remainingNFTs, setRemainingNFTs] = useState("");
@@ -127,9 +122,9 @@ const App = () => {
         // get currentAccount the number of NFT to mint
         let countByAddr = await connectedContract.pendingConfirmCount(currentAccount);
         console.log("countByAddr:",countByAddr.toNumber());
-        setRemainingNFTs(countByAddr.toNumber());
+        setNFTsToMint(countByAddr.toNumber());
         //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
-        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);
+        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);//0,1,2,3,4
         console.log("hashByEventID:",hashByEventID);
 
         // get hash's propose detail
@@ -160,8 +155,8 @@ const App = () => {
         
 
 
-        //approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
-        // let approveHash = await connectedContract.approvePropose(hashByEventID);
+        // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
+        let approveHash = await connectedContract.approvePropose(hashByEventID);
 
         // const client = new NFTStorage({
         //   // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
@@ -229,11 +224,7 @@ const App = () => {
     });
     console.log("tx state clear");
 
-    // install it
-    // Set Up the NFT.Storage Client
     const client = new NFTStorage({
-      // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
-      // token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgxOTQ0NzgzOCwibmFtZSI6InRleHR2ZXJzZS10ZXh0In0.V2Qb3z5JIT9dqvksafgTFfVTV92Yx0upcODojhgMHKc",
       token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
     });
     console.log(client)
@@ -269,20 +260,11 @@ const App = () => {
           });
           console.log("metadata saved", metadata);
 
-          // To view the data we just saved in the browser we need to use an IPFS http bridge
-          // Or Brave Browser which has IPFS integration built into it
-          // Or run a local IPFS node (there's a desktop app)
-          // This means manipulating the returned CID to configure it for a gateway...
-          // Check gateways & their functionality here: https://ipfs.github.io/public-gateway-checker/
-
-          // createImageView(metadata);
+          // createImageView(metadata);  //todo
           
-          //we can also check the status of our data using this
           // const status = await client.status(metadata.ipnft);
           // console.log("status", status);
 
-          // Now that we have a CID and our data is stored on Filecoin, 
-          // - we'll mint the NFT with the token data (and IPFS CID)
           askContractToMintNft(metadata.url);
         });
     } catch (error) {
@@ -295,9 +277,8 @@ const App = () => {
     }
   };
 
-  /* Mint the NFT on the eth blockchain */
   const askContractToMintNft = async (IPFSurl) => {
-    console.log("herer enter askContractToMintNft")
+    // console.log("herer enter askContractToMintNft")
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
@@ -320,7 +301,6 @@ const App = () => {
         // sendRequest
         // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
         let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
-            // ) ipfs://bafkreidgmyqs42h27e3k6ojws4rjufmcpw5erhlyxvy2buuedvtppngs24
 
         connectedContract.on(
           "MakePropose",
@@ -418,8 +398,8 @@ const App = () => {
           signer
         );
 
-        let remainingNFTs = await connectedContract.pendingConfirmCount(currentAccount);
-        setRemainingNFTs(remainingNFTs.toNumber()); //update state
+        let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
+        setNFTsToMint(NFTsToMint.toNumber()); //update state
 
 
         /// @notice mapping propose Id to propose detail
@@ -430,7 +410,7 @@ const App = () => {
 
         // get currentAccount's propose
         // proposeIdByAddr[msg.sender].push(proposeHash);
-        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount, selectEventID);
+        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount);
         console.log("Propose I have:",currentPropose)
 
         // get hash's propose detail
@@ -438,25 +418,9 @@ const App = () => {
         let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
         console.log("Specify propose hash detail:",hashPorposeDetail);
         
-
-     // struct myNFT {
-      //     address owner;
-      //     string tokenURI;
-      //     uint256 tokenId;
-      // }
-      // collection = myNFT[]
         let collection = currentPropose;
         setNftCollectionData(collection); //update state
         console.log("collection", collection);
-
-      //   struct Propose {
-      //     address from;
-      //     address to;
-      //     uint256 eventId;
-      //     string tokenURI;
-      //     bool acceptStatus;
-      //     bool mutualMint;
-      // }
 
         /***
          * Going to put these in the view collection
@@ -467,7 +431,8 @@ const App = () => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log(error);
+      console.log("error");
+      // console.log(error);
     }
   };
 
@@ -476,9 +441,7 @@ const App = () => {
   return (
     <Layout connected={currentAccount === ""} connectWallet={connectWallet}>
       <>
-        <p className="sub-sub-text">{`Received Soul Bound Tokens: `}</p>
-        {/* <p className="sub-sub-text">{`Received Soul Bound Tokens: ${remainingNFTs}`}</p> */}
-
+        <p className="sub-sub-text">{`Soul Bound Tokens to be Mint: ${NFTsToMint}`}</p>
         {transactionState !== INITIAL_TRANSACTION_STATE && <Status transactionState={transactionState}/>}
         {imageView &&
           !linksObj.etherscan && <Link link={imageView} description="See IPFS image link"/>}
@@ -494,10 +457,10 @@ const App = () => {
           arrNFT={arrNFT} setArrNFT={setArrNFT} 
           selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
-          // description={description} setDescription={setDescription} 
 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
+          
         )}
         {recentlyMinted && <NFTViewer recentlyMinted={recentlyMinted}/>}
       </>

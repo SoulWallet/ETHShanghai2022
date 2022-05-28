@@ -11,13 +11,14 @@ const Header = () => {
       >
         <img
           alt="ETH Shanghai 2022 NFTHack Logo"
-          style={{ height: "200px" }}
+          style={{ height: "150px" }}
           src={nftHackLogo}
         ></img>
       </a>
-      <p className="header gradient-text">Soul Bound NFTs Collection</p>
+      <p className="header gradient-text">Welcome to Proof of Soul! </p>
       <p className="sub-text">
-        Soul NFTs for You to mint: 
+PoS is a permissionliss soul bound token issue/mint protocol. <br/>
+You’re welcome to issue souldbound Token to your lover, friends and community to show your love!
       </p>
     </>
   );

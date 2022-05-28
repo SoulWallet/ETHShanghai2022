@@ -1,11 +1,23 @@
 import React from "react";
 
 const MintNFTInput = ({...props}) => {
-    console.log("mintuiprops", props)
-    let {name, setName, receiverAddress, setReceiverAddress, transactionState, createNFTData} = props;
+    // console.log("mintuiprops", props);
+    let {name, setName, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
-        <p>
+      <hr/>
+        <p>  <br />
+        <a className="sub-text gradient-text"> Build a Soul Bound Realtions:</a> <br />       
+          <select
+          className="input"
+          placeholder="Select Type"
+          onChange={(e) => console.log(e.target.value)}
+          >
+            <option>Marriage
+            </option>
+            <option>Citizenship
+            </option> 
+          </select>&nsp
           <input
             className="input"
             placeholder="Enter Soul Token Name"
@@ -14,7 +26,7 @@ const MintNFTInput = ({...props}) => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-          /><br/><br/>        
+          />&nsp
           <input
             className="input"
             placeholder="Enter receiver address "
@@ -23,7 +35,9 @@ const MintNFTInput = ({...props}) => {
             required
             value={receiverAddress}
             onChange={(e) => setReceiverAddress(e.target.value)}
-          />          
+          /><br /> <br />
+          {/* _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string) */}
+
         </p>
         <button
           onClick={createNFTData}
