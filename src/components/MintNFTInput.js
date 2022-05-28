@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
+import { Description } from '@ethersproject/properties';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -51,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const MintNFTInput = ({...props}) => {
     // console.log("mintuiprops", props);
+    let jsonData = [];
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     
@@ -66,7 +68,7 @@ const MintNFTInput = ({...props}) => {
 
     };
 
-    let {name, setName, currentAccount, NFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
+    let {name, setName, currentAccount, NFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, arrNFT, setArrNFT, transactionState, createNFTData} = props;
     return (
     <div>
     <hr/>
@@ -103,7 +105,7 @@ const MintNFTInput = ({...props}) => {
           <select
           className="input"
           placeholder="Select Type"
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(e) => setSelectEventID(e.target.value)}
           >
             <option>Marriage
             </option>
@@ -126,6 +128,7 @@ const MintNFTInput = ({...props}) => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
+            // onChange={(e) => setArrNFT(arrNFT.push(e.target.value))}
           />  &nbsp;
           <input
             className="input"

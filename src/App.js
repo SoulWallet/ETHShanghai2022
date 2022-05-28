@@ -214,7 +214,7 @@ const App = () => {
   } 
 
   /* Create the IPFS CID of the json data */
-  const createNFTData = async () => {
+  const createNFTData = async (jsonData) => {
     console.log("saving to NFT storage...");
     resetState();
     console.log("clear state...");
@@ -235,12 +235,21 @@ const App = () => {
     //name, image, description, other traits.
     // useBlob to save one item to IPFS
     // use File to save all the json metadata needed - much like any object storage you're familiar with!
+    const connectionID = (selectEventID=='Citizenship') ? (connectionID=2) : (connectionID=1);
+    console.log(arrNFT);
+    console.log(connectionID);
     try {
       await client
         .store({
-          name: `${name}: Soul token for friendship @ ETH Shanghai Hackthon 2022`,
-          description: "Soul token sample. jhfnetboy",
-          external_url: "https://soul-token.io/3",
+          name: `${name}`,
+          description: `${name}`,
+          attributes: [
+            {"trait_type": "Issuer",
+            "value": `${currentAccount}`
+          },
+          ],
+          connectionID: `${connectionID}`,
+          // "doubleIssuance":`${doubleIssuance}`,
           image: new File(
             [
               `${baseSVG}${name}</text></svg>`,
