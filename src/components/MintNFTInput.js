@@ -56,7 +56,7 @@ const MintNFTInput = ({...props}) => {
       setValue(newValue);
     };
 
-    let {name, setName, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
+    let {name, setName, NFTsToMint, setNFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
     <hr/>
@@ -65,16 +65,16 @@ const MintNFTInput = ({...props}) => {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
+          <Tab label="Creation History" {...a11yProps(0)} />
+          <Tab label="Attestion Invitation" {...a11yProps(1)} />
+          <Tab label="Create new Soul Token" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         Item One
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+      {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
