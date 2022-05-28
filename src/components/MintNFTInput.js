@@ -6,6 +6,8 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Checkbox from '@material-ui/core/Checkbox';
+import { Description } from '@ethersproject/properties';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,14 +52,23 @@ const useStyles = makeStyles((theme) => ({
 
 const MintNFTInput = ({...props}) => {
     // console.log("mintuiprops", props);
+    let jsonData = [];
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
+    const [checked, setChecked] = React.useState(true);
+    const [selectDI, setSelectDI] = React.useState(true);
+    const handleChange2 = (event) => {
+      setChecked(event.target.checked);
+      event.target.checked ? setSelectDI(true) : setSelectDI(false);
+      console.log("checked:",event.target.checked)
 
-    let {name, setName, NFTsToMint, setNFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, transactionState, createNFTData} = props;
+    };
+
+    let {name, setName, currentAccount, NFTsToMint, receiverAddress, setReceiverAddress, selectEventID, setSelectEventID, arrNFT, setArrNFT, transactionState, createNFTData} = props;
     return (
     <div>
     <hr/>
@@ -72,35 +83,53 @@ const MintNFTInput = ({...props}) => {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Item One
+        {/* history begin */}
+
+        {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
       {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
       </TabPanel>
       <TabPanel value={value} index={2}>
+
+
+
         {/* content begin */}
      
-        <p>  <br />
-        <a className="sub-text gradient-text"> Build a Soul Bound Realtions:</a> <br />       
+       
+        {/* input area begin */}
+
+        <Box bgcolor="info.main">
+        <br /> <br />
+        {/* <a className="sub-text gradient-text"> Build a Soul Bound Realtions:</a> <br />        */}
           <select
           className="input"
           placeholder="Select Type"
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(e) => setSelectEventID(e.target.value)}
           >
             <option>Marriage
             </option>
             <option>Citizenship
             </option> 
-          </select>&nsp
+          </select> &nbsp;
+          <Checkbox
+        defaultChecked
+        color="primary"
+        onChange={(e) => handleChange2(e)}
+        inputProps={{ 'aria-label': 'secondary checkbox' }}
+      /> <label>doubleIssuance</label>
+          <br /> <br />
           <input
             className="input"
             placeholder="Enter Soul Token Name"
+            color="secondary"
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-          /> &nsp
+            // onChange={(e) => setArrNFT(arrNFT.push(e.target.value))}
+          />  &nbsp;
           <input
             className="input"
             placeholder="Enter receiver address "
@@ -110,9 +139,31 @@ const MintNFTInput = ({...props}) => {
             value={receiverAddress}
             onChange={(e) => setReceiverAddress(e.target.value)}
           /><br /> <br />
+          <input
+            className="input"
+            placeholder="Enter description"
+            color="secondary"
+            type="text"
+            // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />  &nbsp;
+      <input
+            className="input"
+            placeholder="Issuer"
+            color="secondary"
+            type="text"
+            // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
+            required
+            disabled="disabled"
+            value={currentAccount}
+            onChange={(e) => setName(e.target.value)}
+          />  &nbsp;
+          <br /> <br />
           {/* _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string) */}
-
-        </p>
+          {/* input area end */}
+        
         <button
           onClick={createNFTData}
           className={
@@ -122,19 +173,14 @@ const MintNFTInput = ({...props}) => {
           }
           disabled={!name || transactionState.loading}
         >
-          Mint NFT
+          Create Realtion Propose
         </button>
-{/* content end*/}
+        </Box>
+      {/* content end*/}
       </TabPanel>
     </div>
 
     {/* tab end */}
-
-
-
-
-
-
 
       </div>
     )
