@@ -1,5 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -23,6 +22,8 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
         string tokenURI;
         bool acceptStatus;
         bool mutualMint;
+        uint256 createAt;
+        uint256 confirmAt;
     }
 
     /// @notice mapping propose Id to propose detail
@@ -118,7 +119,9 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
             block.number,
             _tokenURI,
             false,
-            _mutualMint
+            _mutualMint,
+            block.timestamp,
+            0
         );
         proposeIdByAddr[msg.sender].push(proposeHash);
         addPendingConfirmEnumeration(_party, proposeHash);
@@ -184,6 +187,7 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
 
         require(p.acceptStatus == false, "Already accept propose");
         p.acceptStatus = true; //reentrancy proof
+        p.confirmAt = block.timestamp;
         removePendingConfirmEnumeration(msg.sender, _proposeHash);
 
         if (p.mutualMint) {
@@ -298,8 +302,11 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
         }
     }
 
-     function burn(uint256 tokenId) external {
-         require(_isApprovedOrOwner(_msgSender(), tokenId), "caller is not owner nor approved");
+    function burn(uint256 tokenId) external {
+        require(
+            _isApprovedOrOwner(_msgSender(), tokenId),
+            "caller is not owner nor approved"
+        );
         _burn(tokenId);
     }
 
