@@ -33,6 +33,7 @@ TabPanel.propTypes = {
 };
 
 function a11yProps(index) {
+  // console.log("click index:", index);
   return {
     id: `simple-tab-${index}`,
     'aria-controls': `simple-tabpanel-${index}`,
@@ -64,7 +65,7 @@ const MintNFTInput = ({...props}) => {
 
     <div className={classes.root}>
       <AppBar position="static">
-        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
           <Tab label="Creation History" {...a11yProps(0)} />
           <Tab label="Attestion Invitation" {...a11yProps(1)} />
           <Tab label="Create new Soul Token" {...a11yProps(2)} />
@@ -77,13 +78,7 @@ const MintNFTInput = ({...props}) => {
       {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Item Three
-      </TabPanel>
-    </div>
-
-    {/* tab end */}
-
-{/* content begin */}
+        {/* content begin */}
      
         <p>  <br />
         <a className="sub-text gradient-text"> Build a Soul Bound Realtions:</a> <br />       
@@ -105,7 +100,7 @@ const MintNFTInput = ({...props}) => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-          />&nsp
+          /> &nsp
           <input
             className="input"
             placeholder="Enter receiver address "
@@ -130,6 +125,12 @@ const MintNFTInput = ({...props}) => {
           Mint NFT
         </button>
 {/* content end*/}
+      </TabPanel>
+    </div>
+
+    {/* tab end */}
+
+
 
 
 

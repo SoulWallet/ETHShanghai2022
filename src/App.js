@@ -456,6 +456,7 @@ const App = () => {
           <MintNFTInput 
           name={name} setName={setName} 
           arrNFT={arrNFT} setArrNFT={setArrNFT} 
+          NFTsToMint={NFTsToMint} setNFTsToMint={NFTsToMint}
           selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
