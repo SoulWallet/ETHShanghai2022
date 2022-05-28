@@ -43,7 +43,7 @@ Tasks - development of contract
 > rm ./contracts/Greeter.sol
 > rm ./scripts/sample-script.js
 
-> touch ./contracts/SBTsHack.sol
+> touch ./contracts/SoulToken.sol
 > touch ./scripts/run.js
 > touch ./scripts/deploy.js
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-
+import axios from "axios";
 /* ERC71 based Solidity Contract Interface */
-import SBTsHack from "./utils/SBTsHack.json";
+import SoulToken from "./utils/SoulToken.json";
 
 /* NFT.Storage import for creating an IPFS CID & storing with Filecoin */
 import { NFTStorage, File } from "nft.storage";
@@ -36,13 +36,17 @@ const INITIAL_TRANSACTION_STATE = {
 
 // const CONTRACT_ADDRESS = process.env.REACT_APP_CONTRACT_ADDRESS;
 // set constant contract address cause of server in fleek has no .env
-const CONTRACT_ADDRESS = "0x0144bA53db4A6E52F7310F8D1505a5c7bD2961f3";
+const CONTRACT_ADDRESS = "0x0965EEAB6a3c19F309CB4450226eCE8D3AfADe1A";// by dd
+const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
-  const [list, setList] = useState("");
+  const [receiverAddress, setReceiverAddress] = useState("");
+  const [selectEventID, setSelectEventID] = useState("");
+  const [arrNFT, setArrNFT] = useState([]); //NFT input data
+  const [NFTsToMint, getNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
   const [remainingNFTs, setRemainingNFTs] = useState("");
@@ -61,6 +65,7 @@ const App = () => {
   /* If a wallet is connected, do some setup */
   useEffect(() => {
     setUpEventListener();
+    setSelectEventID(0);
     fetchNFTCollection();
   }, [currentAccount]);
 
@@ -80,19 +85,10 @@ const App = () => {
 
     if (accounts.length !== 0) {
       setCurrentAccount(accounts[0]);
+      console.log("account:",currentAccount);
     } else {
       console.log("No authorized account found");
     }
-
-    //TODO: make sure on right network or change programatically
-    // let chainId = await ethereum.request({ method: 'eth_chainId' });
-    // console.log("Connected to chain " + chainId);
-
-    // // String, hex code of the chainId of the Rinkebey test network
-    // const rinkebyChainId = "0x4";
-    // if (chainId !== rinkebyChainId) {
-    //   alert("You are not connected to the Rinkeby Test Network!");
-    // }
   };
 
   /* Connect a wallet */
@@ -124,17 +120,72 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          SBTsHack.abi,
+          SoulToken.abi,
           signer
         );
+        
+        // get currentAccount the number of NFT to mint
+        let countByAddr = await connectedContract.pendingConfirmCount(currentAccount);
+        console.log("countByAddr:",countByAddr.toNumber());
+        setRemainingNFTs(countByAddr.toNumber());
+        //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
+        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);
+        console.log("hashByEventID:",hashByEventID);
 
-        connectedContract.on("RemainingMintableNFTChange", (remainingNFTs) => {
-          setRemainingNFTs(remainingNFTs);
+        // get hash's propose detail
+        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
+        let hashPorposeDetail = await connectedContract.proposeInfo(hashByEventID);
+
+        // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
+        let cidTemp = hashPorposeDetail[3].split('/')[2];
+        console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
+        let nameJson = hashPorposeDetail[3].split('/')[3];
+        console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+        
+        let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
+        console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
+        let jsonData = {};
+        await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`}).then(response=>{
+          console.log("jsonMeta:", response.data);
+          jsonData = response.data;
         });
+        let nameNFT = jsonData.name;
+        let descriptionNFT = jsonData.description;
+        let external_url = jsonData.external_url;
+        let imageUrl = ipfsBaseGate + jsonData.image.split('/')[2] +'/'+jsonData.image.split('/')[3];
+        console.log("imageUrl:",imageUrl);
+        let imageNFT = await  axios({method: 'get',url: `${jsonData.image}`});
+        console.log("image:",imageNFT);
+
+        
+
+
+        //approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
+        // let approveHash = await connectedContract.approvePropose(hashByEventID);
+
+        // const client = new NFTStorage({
+        //   // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
+        //   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
+        // });
+        // console.log(client);
+        // console.log("client state ok in read");
+        // try {
+        //   await client
+        //     .get("bafyreidboe37vrnxpqrr47i4ja5e7e2uljhofp3uosifltdjrrvfm7dxgy")
+        //     .then((metadata) => {
+        //       console.log("ipfs read content",metadata)
+        //       // do something
+        //     });
+        // } catch (error) {
+        //   console.log(error)
+        //   console.log("Could not save NFT to NFT.Storage - Aborted read");
+        // }
+        
+       
         connectedContract.on(
-          "NewFilecoinNFTMinted",
-          (sender, tokenId, tokenURI) => {
-            console.log("event - new minted NFT");
+          "MakePropose",
+          (sender, party, proposeHash, eventId) => {
+            console.log(sender, " build a eventID=",eventId," nft for address: ",party,",hash is:  ",proposeHash);
             fetchNFTCollection();
           }
         );
@@ -142,7 +193,7 @@ const App = () => {
         console.log("Ethereum object doesn't exist!");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -150,7 +201,7 @@ const App = () => {
   const resetState = () => {
     setLinksObj(INITIAL_LINK_STATE);
     setName("");
-    setList("");
+    setReceiverAddress("");
     setImageView("");
   }
 
@@ -169,19 +220,24 @@ const App = () => {
 
   /* Create the IPFS CID of the json data */
   const createNFTData = async () => {
-    console.log("saving to NFT storage");
+    console.log("saving to NFT storage...");
     resetState();
+    console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
       loading: "Saving NFT data to NFT.Storage...",
     });
+    console.log("tx state clear");
 
     // install it
     // Set Up the NFT.Storage Client
     const client = new NFTStorage({
       // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgxOTQ0NzgzOCwibmFtZSI6InRleHR2ZXJzZS10ZXh0In0.V2Qb3z5JIT9dqvksafgTFfVTV92Yx0upcODojhgMHKc",
+      // token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgxOTQ0NzgzOCwibmFtZSI6InRleHR2ZXJzZS10ZXh0In0.V2Qb3z5JIT9dqvksafgTFfVTV92Yx0upcODojhgMHKc",
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
     });
+    console.log(client)
+    console.log("client state ok");
 
     //lets load up this token with some metadata and our image and save it to NFT.storage
     //image contains any File or Blob you want to save
@@ -191,27 +247,24 @@ const App = () => {
     try {
       await client
         .store({
-          name: `${name}: SBTs@ ETH Shanghai Hackthon 2022`,
-          description:
-            "NFT created for ETH Shanghai Hackthon 2022 and limited to 10000 NFT tokens",
+          name: `${name}: Soul token for friendship @ ETH Shanghai Hackthon 2022`,
+          description: "Soul token sample. jhfnetboy",
+          external_url: "https://soul-token.io/3",
           image: new File(
             [
-              `${baseSVG}${name}</text>
-      </svg>`,
+              `${baseSVG}${name}</text></svg>`,
             ],
-            `FilecoinNFTHack.svg`,
+            `SoulTokens.svg`,
             {
               type: "image/svg+xml",
             }
-          ),
-          traits: {
-            awesomeness: "100", //probs should use 0-1 for solidity
-          },
+          ),          
         })
         .then((metadata) => {
+          console.log(metadata)
           setTransactionState({
             ...transactionState,
-            success: "Saved NFT data to NFT.Storage...!! We created an IPFS CID & made a Filecoin Storage Deal with one call!",
+            success: "Saved NFT data to NFT.Storage...!! ",
             loading: "",
           });
           console.log("metadata saved", metadata);
@@ -221,7 +274,8 @@ const App = () => {
           // Or run a local IPFS node (there's a desktop app)
           // This means manipulating the returned CID to configure it for a gateway...
           // Check gateways & their functionality here: https://ipfs.github.io/public-gateway-checker/
-          createImageView(metadata);
+
+          // createImageView(metadata);
           
           //we can also check the status of our data using this
           // const status = await client.status(metadata.ipnft);
@@ -232,6 +286,7 @@ const App = () => {
           askContractToMintNft(metadata.url);
         });
     } catch (error) {
+      console.log(error)
       console.log("Could not save NFT to NFT.Storage - Aborted minting");
       setTransactionState({
         ...INITIAL_TRANSACTION_STATE,
@@ -242,6 +297,7 @@ const App = () => {
 
   /* Mint the NFT on the eth blockchain */
   const askContractToMintNft = async (IPFSurl) => {
+    console.log("herer enter askContractToMintNft")
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
@@ -256,21 +312,24 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          SBTsHack.abi,
+          SoulToken.abi,
           signer
         );
 
         console.log("Opening wallet");
-        let nftTxn = await connectedContract.mintMyNFT(IPFSurl);
+        // sendRequest
+        // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
+        let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
+            // ) ipfs://bafkreidgmyqs42h27e3k6ojws4rjufmcpw5erhlyxvy2buuedvtppngs24
 
         connectedContract.on(
-          "NewFilecoinNFTMinted",
-          (from, tokenId, tokenURI) => {
-            console.log("event listener", from, tokenId.toNumber(), tokenURI);
+          "MakePropose",
+          (from, to,proposeHash, eventId) => {
+            console.log(from, " build a eventID=",eventId," nft for address: ",to,",hash is:  ",proposeHash);
             setLinksObj({
               ...linksObj,
-              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${tokenId.toNumber()}`,
-              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}:${tokenId.toNumber()}`,
+              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
+              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}:${eventId.toNumber()}`,
               etherscan: `https://rinkeby.etherscan.io/tx/${nftTxn.hash}`,
             });
           }
@@ -355,21 +414,54 @@ const App = () => {
         const signer = provider.getSigner();
         const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
-          SBTsHack.abi,
+          SoulToken.abi,
           signer
         );
 
-        let remainingNFTs = await connectedContract.remainingMintableNFTs();
+        let remainingNFTs = await connectedContract.pendingConfirmCount(currentAccount);
         setRemainingNFTs(remainingNFTs.toNumber()); //update state
 
-        let collection = await connectedContract.getNFTCollection();
+
+        /// @notice mapping propose Id to propose detail
+        // mapping(bytes32 => Propose) public proposeInfo;
+        /// @notice get list of propose Ids created By address
+        // mapping(address => bytes32[]) public proposeIdByAddr;
+         
+
+        // get currentAccount's propose
+        // proposeIdByAddr[msg.sender].push(proposeHash);
+        let currentPropose = await connectedContract.proposeIdByAddr(currentAccount, selectEventID);
+        console.log("Propose I have:",currentPropose)
+
+        // get hash's propose detail
+        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
+        let hashPorposeDetail = await connectedContract.proposeInfo(currentPropose);
+        console.log("Specify propose hash detail:",hashPorposeDetail);
+        
+
+     // struct myNFT {
+      //     address owner;
+      //     string tokenURI;
+      //     uint256 tokenId;
+      // }
+      // collection = myNFT[]
+        let collection = currentPropose;
         setNftCollectionData(collection); //update state
         console.log("collection", collection);
+
+      //   struct Propose {
+      //     address from;
+      //     address to;
+      //     uint256 eventId;
+      //     string tokenURI;
+      //     bool acceptStatus;
+      //     bool mutualMint;
+      // }
 
         /***
          * Going to put these in the view collection
          */
-        await createImageURLsForRetrieval(collection);
+        // await createImageURLsForRetrieval(collection);
 
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -384,7 +476,9 @@ const App = () => {
   return (
     <Layout connected={currentAccount === ""} connectWallet={connectWallet}>
       <>
-        <p className="sub-sub-text">{`Remaining NFT's: ${remainingNFTs}`}</p>
+        <p className="sub-sub-text">{`Received Soul Bound Tokens: `}</p>
+        {/* <p className="sub-sub-text">{`Received Soul Bound Tokens: ${remainingNFTs}`}</p> */}
+
         {transactionState !== INITIAL_TRANSACTION_STATE && <Status transactionState={transactionState}/>}
         {imageView &&
           !linksObj.etherscan && <Link link={imageView} description="See IPFS image link"/>}
@@ -395,7 +489,15 @@ const App = () => {
         ) : transactionState.loading ? (
           <div />
         ) : (
-          <MintNFTInput name={name} setName={setName} transactionState={transactionState} createNFTData={createNFTData}/>
+          <MintNFTInput 
+          name={name} setName={setName} 
+          arrNFT={arrNFT} setArrNFT={setArrNFT} 
+          selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
+          receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
+          // description={description} setDescription={setDescription} 
+
+          transactionState={transactionState} 
+          createNFTData={createNFTData}/>
         )}
         {recentlyMinted && <NFTViewer recentlyMinted={recentlyMinted}/>}
       </>
