@@ -310,6 +310,10 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
         _burn(tokenId);
     }
 
+     function getproposeIdByAddr(address _addr) external view returns (bytes32[] memory){
+        return proposeIdByAddr[_addr];
+    }
+
     /// @notice withdraw the ether in the contract
     /// @dev
     /// @return
