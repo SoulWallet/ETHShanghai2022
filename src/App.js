@@ -182,15 +182,12 @@ const App = () => {
     console.log(client)
     console.log("client state ok");
 
-    //lets load up this token with some metadata and our image and save it to NFT.storage
     //image contains any File or Blob you want to save
-    //name, image, description, other traits.
-    // useBlob to save one item to IPFS
-    // use File to save all the json metadata needed - much like any object storage you're familiar with!
     let connectionID = 1;
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
-    console.log(arrNFT);
     console.log("connectionID----you select ",connectionID);
+
+    console.log(arrNFT);
     try {
       await client
         .store({
@@ -427,6 +424,9 @@ const App = () => {
             let mMint = hashPorposeDetail["mutualMint"] ? "true" : "false";
             let aStatus = hashPorposeDetail["acceptStatus"] ? "true" : "false";
 
+            // console.log("eventID:",hashPorposeDetail["eventId"]);
+            // console.log("eventID:",hashPorposeDetail["eventId"].toNumber());
+
             historyItems.push(<p key={index}>"Pending proposeHash:"{item}
             <br/>
             "Propose Issuer:":{hashPorposeDetail["from"]}
@@ -440,7 +440,6 @@ const App = () => {
             "Propose mutualMint:":{mMint}
             <br/>
             "Propose acceptStatus:":{aStatus}
-  
             <br/>
             "Propose eventId:":{hashPorposeDetail["eventId"].toNumber()}
             <br/>
@@ -511,7 +510,6 @@ const App = () => {
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
-          
         )}
         {recentlyMinted && <NFTViewer recentlyMinted={recentlyMinted}/>}
       </>

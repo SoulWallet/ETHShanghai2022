@@ -22,7 +22,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <Typography component={'span'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -96,8 +96,6 @@ const MintNFTInput = ({...props}) => {
       </TabPanel>
       <TabPanel value={value} index={2}>
 
-
-
         {/* content begin */}
      
        
@@ -110,9 +108,7 @@ const MintNFTInput = ({...props}) => {
           className="input"
           placeholder="Select Type"
           onChange={(e) => setSelectEventID(e.target.value)
-          
-          }
-          >
+          }>
             <option>Marriage
             </option>
             <option>Citizenship
