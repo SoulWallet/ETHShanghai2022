@@ -85,7 +85,7 @@ const MintNFTInput = ({...props}) => {
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        Your Account: {currentAccount}---- You have create {createdCount} proposal.<hr></hr>
+        Your Account: {currentAccount}  ---- You have create {createdCount} proposal.<hr></hr>
         {cHistory}
         {/* history end */}
       </TabPanel>

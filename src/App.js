@@ -365,18 +365,18 @@ const App = () => {
         // get pending count
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
-        console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
+        // console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
         const approvePropose = async(hash) => await connectedContract.approvePropose(hash);
 
         let pendingItems=[];
         for(var i=0;i<NFTsToMint.toNumber();i++){
           let proposeHash = await connectedContract.pendingConfirmByIndex(currentAccount,i);
-          console.log("pendingConfirmByIndex:",proposeHash);
+          // console.log("pendingConfirmByIndex:",proposeHash);
           let porposeDetail =  await connectedContract.proposeInfo(proposeHash);
           // console.log("porposeDetail:",porposeDetail);
-          let cttime = moment(porposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
-          let cftime = moment(porposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
+          let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+          let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
            <button  onClick={()=>approvePropose(proposeHash)}>Mint My Invitation</button>
@@ -410,16 +410,18 @@ const App = () => {
         
         // get currentAccount's propose array
         let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
-        console.log("Propose I have:",currentPropose);
+        // console.log("Propose I have:",currentPropose);
         
         let historyItems = [];
         let createdCount = 0;
         currentPropose.map(async(item,index)=> {
           createdCount  = createdCount+1;
             const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
-            console.log("Created by you, propose hash:",item);
-            let cttime = moment(hashPorposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
-            let cftime = moment(hashPorposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
+            // console.log("Created by you, propose hash:",item);
+            // console.log("timestamp:",hashPorposeDetail["createAt"],"number:", hashPorposeDetail["createAt"].toNumber());
+
+            let cttime = moment((hashPorposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+            let cftime = moment((hashPorposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
             historyItems.push(<p key={index}>"Pending proposeHash:"{item}
             <br/>
             "Propose Issuer:":{hashPorposeDetail["from"]}
@@ -444,7 +446,7 @@ const App = () => {
           }) ;
           setCHistory(historyItems);
           setCreatedCount(createdCount);
-          console.log("cHistory:",cHistory);
+          // console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
 
