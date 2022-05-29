@@ -359,6 +359,33 @@ const App = () => {
         console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
         
+        let pendingItems=[];
+        for(var i=0;i<NFTsToMint.toNumber();i++){
+          let proposeHash = await connectedContract.pendingConfirmByIndex(currentAccount,i);
+          console.log("pendingConfirmByIndex:",proposeHash);
+          let porposeDetail =  await connectedContract.proposeInfo(proposeHash);
+          // console.log("porposeDetail:",porposeDetail);
+          pendingItems.push(<p key={i}>"Pending proposeHash:"{proposeHash}
+          <br/>
+          "Propose Issuer:":{porposeDetail["from"]}
+          <br/>
+          "Propose Receiver:":{porposeDetail["to"]}
+          <br/>
+          "Propose Issuer:":{porposeDetail["createAt"].toNumber()}          
+          <br/>
+          "Propose Issuer:":{porposeDetail["confirmAt"].toNumber()}
+          <br/>
+          "Propose mutualMint:":{porposeDetail["mutualMint"]}
+          <br/>
+          "Propose acceptStatus:":{porposeDetail["acceptStatus"]}
+
+          <br/>
+          "Propose Issuer:":{porposeDetail["eventId"].toNumber()}
+          <br/>
+          "Propose Issuer:":{porposeDetail["tokenURI"]}                                                            
+          </p>);
+          console.log(pendingItems[0]);
+        }
         // const pendingPropose = async _ => {
         //   currentPropose.map(async(item,index)=> {
         //     const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
