@@ -48,7 +48,7 @@ const App = () => {
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
   // const [remainingNFTs, setRemainingNFTs] = useState("");
-  const [nftCollectionData, setNftCollectionData] = useState("");
+  // const [nftCollectionData, setNftCollectionData] = useState("");
   const [recentlyMinted, setRecentlyMinted] = useState("");
   const [transactionState, setTransactionState] = useState(
     INITIAL_TRANSACTION_STATE
@@ -365,7 +365,8 @@ const App = () => {
         setNFTsToMint(NFTsToMint.toNumber()); //update state
         console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
-        
+        const approvePropose = async(hash) => await connectedContract.approvePropose(hash);
+
         let pendingItems=[];
         for(var i=0;i<NFTsToMint.toNumber();i++){
           let proposeHash = await connectedContract.pendingConfirmByIndex(currentAccount,i);
@@ -374,7 +375,9 @@ const App = () => {
           // console.log("porposeDetail:",porposeDetail);
           let cttime = moment(porposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
           let cftime = moment(porposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
-          pendingItems.push(<p key={i}>"Pending proposeHash:"{proposeHash}
+          pendingItems.push(<p key={i}>
+            "Pending proposeHash:"
+           <button  onClick={()=>approvePropose({proposeHash})}>Mint My Invitation</button>
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>
@@ -398,7 +401,10 @@ const App = () => {
         }
         setCPending(pendingItems);
 
-        // 1. get currentAccount who create the propose
+        // 3> approve to mint my invitation
+
+
+        // 1> get currentAccount who create the propose
         
         // get currentAccount's propose array
         let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
@@ -430,31 +436,13 @@ const App = () => {
             "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
             <br/> <hr></hr>                                                         
             </p>);            
-            // setNftCollectionData(hashPorposeDetail); //update state
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
           setCHistory(historyItems);
           console.log("cHistory:",cHistory);
 
+        //await createImageURLsForRetrieval(hashPorposeDetail);
 
-        // const pendingPropose = async _ => {
-        //   currentPropose.map(async(item,index)=> {
-        //     const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
-        //     // console.log("Specify propose hash detail:",hashPorposeDetail);
-        //     setNftCollectionData(hashPorposeDetail); //update state
-        //     await createImageURLsForRetrieval(hashPorposeDetail);
-        //   }) 
-        // }
- 
-
-        // // get hash's propose detail
-        // let hashPropose = '';
-        // // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
-        // let hashPorposeDetail = await connectedContract.proposeInfo(hashPropose);
-        // // console.log("hashPorposeDetail:",hashPorposeDetail);
-
-
-        // // 1> get the data as a receiver end
 
         // // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
         // let cidTemp = hashPorposeDetail[3].split('/')[2];
