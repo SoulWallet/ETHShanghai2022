@@ -68,7 +68,7 @@ const MintNFTInput = ({...props}) => {
 
     };
 
-    let {name, setName, currentAccount, NFTsToMint, cHistory, cPending, createdCount,
+    let {name, setName, description, setDescription, currentAccount, NFTsToMint, cHistory, cPending, createdCount,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
@@ -148,8 +148,8 @@ const MintNFTInput = ({...props}) => {
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
             required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />  &nbsp;
       <input
             className="input"

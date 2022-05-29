@@ -38,6 +38,8 @@ const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
+  const [description,setDescription] = useState("");
+  
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
   const [cHistory, setCHistory] = useState("");
@@ -167,32 +169,32 @@ const App = () => {
 
   /* Create the IPFS CID of the json data */
   const createNFTData = async (jsonData) => {
-    console.log("saving to NFT storage...");
+    // console.log("saving to NFT storage...");
     resetState();
-    console.log("clear state...");
+    // console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
       loading: "Saving NFT data to NFT.Storage...",
     });
-    console.log("tx state clear");
+    // console.log("tx state clear");
 
     const client = new NFTStorage({
       token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
     });
-    console.log(client)
-    console.log("client state ok");
+    // console.log(client)
+    // console.log("client state ok");
 
     //image contains any File or Blob you want to save
     let connectionID = 1;
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
-    console.log("connectionID----you select ",connectionID);
+    // console.log("connectionID----you select ",connectionID);
 
     console.log(arrNFT);
     try {
       await client
         .store({
           name: `${name}`,
-          description: `${name}`,
+          description: `${description}`,
           attributes: [
             {"trait_type": "Issuer",
             "value": `${currentAccount}`
@@ -507,6 +509,7 @@ const App = () => {
           NFTsToMint={NFTsToMint} currentAccount={currentAccount}
           cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
+           description={description} setDescription={setDescription}
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
