@@ -40,6 +40,7 @@ const App = () => {
   const [doubleIssuance,setDoubleIssuance] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
+  const [fileBlob, setFileBlob] = useState("");
   const [cHistory, setCHistory] = useState("");
   const [cPending, setCPending] = useState("");
   const [createdCount, setCreatedCount] = useState("");
@@ -172,16 +173,24 @@ const App = () => {
     });
     // console.log("tx state clear");
 
-    const client = new NFTStorage({
-      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
-    });
-    // console.log(client)
-    // console.log("client state ok");
-
     //image contains any File or Blob you want to save
     let connectionID = 1;
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
     // console.log("connectionID----you select ",connectionID);
+    
+    // let imageData = new File(
+    //   [
+    //     `${baseSVG}${name}</text></svg>`,
+    //   ],
+    //   `SoulTokens.svg`,
+    //   {
+    //     type: "image/svg+xml",
+    //   }
+    // );
+    // console.log("imageData:::::",imageData);
+
+    let imageData = fileBlob.files[0];
+
     let jsonData = {
       name: `${name}`,
       description: `${description}`,
@@ -192,17 +201,13 @@ const App = () => {
       ],
       connectionID: `${connectionID}`,
       doubleIssuance:`${doubleIssuance}`,
-      image: new File(
-        [
-          `${baseSVG}${name}</text></svg>`,
-        ],
-        `SoulTokens.svg`,
-        {
-          type: "image/svg+xml",
-        }
-      ),          
+      image: imageData,          
     };
 
+    const client = new NFTStorage({
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
+    });
+    // token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
     try {
       await client
         .store(jsonData)
@@ -216,9 +221,7 @@ const App = () => {
           console.log("metadata saved", metadata);
 
           // createImageView(metadata);  //todo
-          
           // const status = await client.status(metadata.ipnft);
-
           askContractToMintNft(metadata.url);
         });
     } catch (error) {
@@ -503,7 +506,8 @@ const App = () => {
           cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
            description={description} setDescription={setDescription}
-           setDoubleIssuance={setDoubleIssuance}
+           setDoubleIssuance={setDoubleIssuance} 
+           fileBlob={fileBlob} setFileBlob={setFileBlob}
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>

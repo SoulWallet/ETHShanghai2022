@@ -7,7 +7,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Description } from '@ethersproject/properties';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,19 +53,19 @@ const MintNFTInput = ({...props}) => {
     // console.log("mintuiprops", props);
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    
+    // const [fileBlob, setFileBlob] = React.useState();
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
-    const [checked, setChecked] = React.useState(true);
+    // const [checked, setChecked] = React.useState(true);
     const handleChange2 = (event) => {
-      setChecked(event.target.checked);
+      // setChecked(event.target.checked);
       event.target.checked ? setDoubleIssuance(true) : setDoubleIssuance(false);
       console.log("checked:",event.target.checked)
 
     };
 
-    let {name, setName, description, setDescription, currentAccount,
+    let {name, setName, description, setDescription, currentAccount,fileBlob, setFileBlob,
        NFTsToMint, cHistory, cPending, createdCount, setDoubleIssuance,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
@@ -163,9 +162,17 @@ const MintNFTInput = ({...props}) => {
             onChange={(e) => setName(e.target.value)}
           />  &nbsp;
           <br /> <br />
-          {/* _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string) */}
           {/* input area end */}
-        
+          <input
+            className="input"
+            placeholder="Select a picture"
+            color="secondary"
+            type="file"
+            // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
+            required
+            // value={fileBlob}
+            onChange={(e) => setFileBlob(e.target)}
+          />  &nbsp;<br />
         <button
           onClick={createNFTData}
           className={
@@ -175,7 +182,7 @@ const MintNFTInput = ({...props}) => {
           }
           disabled={!name || transactionState.loading}
         >
-          Create Realtion Propose
+          Create Soul Token
         </button>
         <br /><br />
         </Box>
