@@ -65,6 +65,8 @@ const App = () => {
   /* If a wallet is connected, do some setup */
   useEffect(() => {
     setUpEventListener();
+    setCPending("");
+    setCHistory("");
     fetchNFTCollection();
   }, [currentAccount]);
 
@@ -147,8 +149,6 @@ const App = () => {
     setLinksObj(INITIAL_LINK_STATE);
     setName("");
     setReceiverAddress("");
-    setCPending("");
-    setCHistory("");
     setImageView("");
   }
 
