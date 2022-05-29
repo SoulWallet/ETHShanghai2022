@@ -33,7 +33,6 @@ const INITIAL_TRANSACTION_STATE = {
 const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
-
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
@@ -43,7 +42,7 @@ const App = () => {
   const [NFTsToMint, setNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
-  const [remainingNFTs, setRemainingNFTs] = useState("");
+  // const [remainingNFTs, setRemainingNFTs] = useState("");
   const [nftCollectionData, setNftCollectionData] = useState("");
   const [recentlyMinted, setRecentlyMinted] = useState("");
   const [transactionState, setTransactionState] = useState(
@@ -59,24 +58,22 @@ const App = () => {
   /* If a wallet is connected, do some setup */
   useEffect(() => {
     setUpEventListener();
-    setSelectEventID(0);
     fetchNFTCollection();
   }, [currentAccount]);
 
   /* Check for a wallet */
   const checkIfWalletIsConnected = async () => {
     const { ethereum } = window;
-
     if (!ethereum) {
       console.log("Make sure you have metamask!");
       return;
     } else {
-      console.log("We have the ethereum object", ethereum);
+      // console.log("We have the ethereum object", ethereum);
+      console.log("---------------------------------")
       setUpEventListener();
     }
 
     const accounts = await ethereum.request({ method: "eth_accounts" });
-
     if (accounts.length !== 0) {
       setCurrentAccount(accounts[0]);
       console.log("account:",currentAccount);
@@ -118,68 +115,14 @@ const App = () => {
           signer
         );
         
-        // get currentAccount the number of NFT to mint
         let countByAddr = await connectedContract.pendingConfirmCount(currentAccount);
-        console.log("countByAddr:",countByAddr.toNumber());
         setNFTsToMint(countByAddr.toNumber());
-        console.log("NFTsToMint:",NFTsToMint.toNumber());
-        //get the hash of specify eventID(marriage:0, alliance:1, etc) that to be approved
-        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount, selectEventID);//0,1,2,3,4
-        console.log("hashByEventID:",hashByEventID);
-
-        // get hash's propose detail
-        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
-        let hashPorposeDetail = await connectedContract.proposeInfo(hashByEventID);
-
-        // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
-        let cidTemp = hashPorposeDetail[3].split('/')[2];
-        console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
-        let nameJson = hashPorposeDetail[3].split('/')[3];
-        console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+        // console.log("setUpEventListener---->NFTsToMint:",NFTsToMint);
         
-        let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
-        console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
-        let jsonData = {};
-        await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`}).then(response=>{
-          console.log("jsonMeta:", response.data);
-          jsonData = response.data;
-        });
-        let nameNFT = jsonData.name;
-        let descriptionNFT = jsonData.description;
-        let external_url = jsonData.external_url;
-        let imageUrl = ipfsBaseGate + jsonData.image.split('/')[2] +'/'+jsonData.image.split('/')[3];
-        console.log("imageUrl:",imageUrl);
-        let imageNFT = await  axios({method: 'get',url: `${jsonData.image}`});
-        console.log("image:",imageNFT);
-
-        
-
-
-        // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
-        let approveHash = await connectedContract.approvePropose(hashByEventID);
-
-        // const client = new NFTStorage({
-        //   // token: process.env.REACT_APP_NFT_STORAGE_API_KEY,
-        //   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
-        // });
-        // console.log(client);
-        // console.log("client state ok in read");
-        // try {
-        //   await client
-        //     .get("bafyreidboe37vrnxpqrr47i4ja5e7e2uljhofp3uosifltdjrrvfm7dxgy")
-        //     .then((metadata) => {
-        //       console.log("ipfs read content",metadata)
-        //       // do something
-        //     });
-        // } catch (error) {
-        //   console.log(error)
-        //   console.log("Could not save NFT to NFT.Storage - Aborted read");
-        // }
-        
-       
         connectedContract.on(
           "MakePropose",
           (sender, party, proposeHash, eventId) => {
+            console.log("get a propose sendrequest ok, fetch it now....");
             console.log(sender, " build a eventID=",eventId," nft for address: ",party,",hash is:  ",proposeHash);
             fetchNFTCollection();
           }
@@ -235,9 +178,10 @@ const App = () => {
     //name, image, description, other traits.
     // useBlob to save one item to IPFS
     // use File to save all the json metadata needed - much like any object storage you're familiar with!
-    const connectionID = (selectEventID=='Citizenship') ? (connectionID=2) : (connectionID=1);
+    let connectionID = 1;
+    connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
     console.log(arrNFT);
-    console.log(connectionID);
+    console.log("connectionID----you select ",connectionID);
     try {
       await client
         .store({
@@ -396,10 +340,9 @@ const App = () => {
     2. Filecoin via IPFS addressing & http gateways
  */
   const fetchNFTCollection = async () => {
-    console.log("fetching nft collection");
+    console.log("fetching nft collection..............................");
     try {
       const { ethereum } = window;
-
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
@@ -409,9 +352,47 @@ const App = () => {
           signer
         );
 
+        // 1> get the data as a receiver begin
+        // get pending count
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
-        console.log("NFTsToMint:",NFTsToMint?.toNumber());
+        console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
+
+        //get the hash of specify eventID(Marriage:1, Citizenship:1, etc) that to be approved
+        let hashByEventID = await connectedContract.pendingConfirmByIndex(currentAccount);//0,1,2,3,4
+        console.log("hashByEventID hex?:",hashByEventID);
+
+        // get hash's propose detail
+        // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
+        let hashPorposeDetail = await connectedContract.proposeInfo(hashByEventID);
+        // console.log("hashPorposeDetail:",hashPorposeDetail);
+
+
+        // 1> get the data as a receiver end
+
+        // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
+        let cidTemp = hashPorposeDetail[3].split('/')[2];
+        // console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
+        let nameJson = hashPorposeDetail[3].split('/')[3];
+        // console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+        
+        let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
+        // console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
+        let jsonData = {};
+        await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`}).then(response=>{
+          // console.log("jsonMeta:", response.data);
+          jsonData = response.data;
+        });
+        let nameNFT = jsonData.name;
+        let descriptionNFT = jsonData.description;
+        let external_url = jsonData.external_url;
+        let imageUrl = ipfsBaseGate + jsonData.image.split('/')[2] +'/'+jsonData.image.split('/')[3];
+        // console.log("imageUrl:",imageUrl);
+        let imageNFT = await  axios({method: 'get',url: `${jsonData.image}`});
+        // console.log("image:",imageNFT);
+          // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
+        let approveHash = await connectedContract.approvePropose(hashByEventID);
+
 
         // get currentAccount's propose
         let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
@@ -421,7 +402,7 @@ const App = () => {
         const getImagePrepare = async _ => {
           currentPropose.map(async(item,index)=> {
             const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
-            console.log("Specify propose hash detail:",hashPorposeDetail);
+            // console.log("Specify propose hash detail:",hashPorposeDetail);
             setNftCollectionData(hashPorposeDetail); //update state
             await createImageURLsForRetrieval(hashPorposeDetail);
           }) 
