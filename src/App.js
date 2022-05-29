@@ -377,6 +377,8 @@ const App = () => {
           // console.log("porposeDetail:",porposeDetail);
           let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+          let mMint = porposeDetail["mutualMint"] ? "true" : "false";
+          let aStatus = porposeDetail["acceptStatus"] ? "true" : "false";
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
            <button  onClick={()=>approvePropose(proposeHash)}>Mint My Invitation</button>
@@ -389,9 +391,9 @@ const App = () => {
           <br/>
           "Propose confirmAt:":{cftime}
           <br/>
-          "Propose mutualMint:":{porposeDetail["mutualMint"]}
+          "Propose mutualMint:":{mMint}
           <br/>
-          "Propose acceptStatus:":{porposeDetail["acceptStatus"]}
+          "Propose acceptStatus:":{aStatus}
 
           <br/>
           "Propose eventId:":{porposeDetail["eventId"].toNumber()}
@@ -422,6 +424,9 @@ const App = () => {
 
             let cttime = moment((hashPorposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
             let cftime = moment((hashPorposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+            let mMint = hashPorposeDetail["mutualMint"] ? "true" : "false";
+            let aStatus = hashPorposeDetail["acceptStatus"] ? "true" : "false";
+
             historyItems.push(<p key={index}>"Pending proposeHash:"{item}
             <br/>
             "Propose Issuer:":{hashPorposeDetail["from"]}
@@ -432,9 +437,9 @@ const App = () => {
             <br/>
             "Propose confirmAt:":{cftime}
             <br/>
-            "Propose mutualMint:":{hashPorposeDetail["mutualMint"]}
+            "Propose mutualMint:":{mMint}
             <br/>
-            "Propose acceptStatus:":{hashPorposeDetail["acceptStatus"]}
+            "Propose acceptStatus:":{aStatus}
   
             <br/>
             "Propose eventId:":{hashPorposeDetail["eventId"].toNumber()}
