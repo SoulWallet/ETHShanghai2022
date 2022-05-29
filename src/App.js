@@ -503,7 +503,7 @@ const App = () => {
           cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
            description={description} setDescription={setDescription}
-           doubleIssuance={doubleIssuance} setDoubleIssuance={setDoubleIssuance}
+           setDoubleIssuance={setDoubleIssuance}
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>

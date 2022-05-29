@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
 
 const MintNFTInput = ({...props}) => {
     // console.log("mintuiprops", props);
-    let jsonData = [];
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     
@@ -68,7 +67,7 @@ const MintNFTInput = ({...props}) => {
     };
 
     let {name, setName, description, setDescription, currentAccount,
-       NFTsToMint, cHistory, cPending, createdCount, doubleIssuance, setDoubleIssuance,
+       NFTsToMint, cHistory, cPending, createdCount, setDoubleIssuance,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
