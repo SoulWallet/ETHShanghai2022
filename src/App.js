@@ -4,6 +4,7 @@ import SoulToken from "./utils/SoulToken.json";
 import { NFTStorage, File } from "nft.storage";
 import { baseSVG } from "./utils/BaseSVG";
 import { ethers } from "ethers";
+import moment from "moment";
 
 /* UI Components & Style*/
 import "./styles/App.css";
@@ -15,6 +16,7 @@ import Link from "./components/Link";
 import DisplayLinks from "./components/DisplayLinks";
 import ConnectWalletButton from "./components/ConnectWalletButton";
 import NFTViewer from "./components/NFTViewer";
+import { mnemonicToEntropy } from "ethers/lib/utils";
 
 const INITIAL_LINK_STATE = {
   etherscan: "",
@@ -39,6 +41,8 @@ const App = () => {
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
   const [cHistory, setCHistory] = useState("");
+  const [cPending, setCPending] = useState("");
+  
   const [arrNFT, setArrNFT] = useState([]); //NFT input data
   const [NFTsToMint, setNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
@@ -141,6 +145,8 @@ const App = () => {
     setLinksObj(INITIAL_LINK_STATE);
     setName("");
     setReceiverAddress("");
+    setCPending("");
+    setCHistory("");
     setImageView("");
   }
 
@@ -353,7 +359,7 @@ const App = () => {
           signer
         );
 
-        // 1> get the data as a receiver begin
+        // 2> get the data as a receiver begin
         // get pending count
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
@@ -366,29 +372,31 @@ const App = () => {
           console.log("pendingConfirmByIndex:",proposeHash);
           let porposeDetail =  await connectedContract.proposeInfo(proposeHash);
           // console.log("porposeDetail:",porposeDetail);
+          let cttime = moment(porposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
+          let cftime = moment(porposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
           pendingItems.push(<p key={i}>"Pending proposeHash:"{proposeHash}
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>
           "Propose Receiver:":{porposeDetail["to"]}
           <br/>
-          "Propose Issuer:":{porposeDetail["createAt"].toNumber()}          
+          "Propose createAt:":{cttime}          
           <br/>
-          "Propose Issuer:":{porposeDetail["confirmAt"].toNumber()}
+          "Propose confirmAt:":{cftime}
           <br/>
           "Propose mutualMint:":{porposeDetail["mutualMint"]}
           <br/>
           "Propose acceptStatus:":{porposeDetail["acceptStatus"]}
 
           <br/>
-          "Propose Issuer:":{porposeDetail["eventId"].toNumber()}
+          "Propose eventId:":{porposeDetail["eventId"].toNumber()}
           <br/>
-          "Propose Issuer:":{porposeDetail["tokenURI"]}  
+          "Propose tokenURI:":{porposeDetail["tokenURI"]}  
           <br/> <hr></hr>                                                         
           </p>);
-          console.log(pendingItems[0]);
+          // console.log(pendingItems[0]);
         }
-        setCHistory(pendingItems);
+        setCPending(pendingItems);
         // const pendingPropose = async _ => {
         //   currentPropose.map(async(item,index)=> {
         //     const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
@@ -473,7 +481,8 @@ const App = () => {
           <MintNFTInput 
           name={name} setName={setName} 
           NFTsToMint={NFTsToMint} currentAccount={currentAccount}
-          cHistory={cHistory} setSelectEventID={setSelectEventID} 
+          cHistory={cHistory} cPending={cPending}
+           setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>

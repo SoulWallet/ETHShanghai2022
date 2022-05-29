@@ -68,7 +68,7 @@ const MintNFTInput = ({...props}) => {
 
     };
 
-    let {name, setName, currentAccount, NFTsToMint, cHistory,
+    let {name, setName, currentAccount, NFTsToMint, cHistory, cPending,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
@@ -90,7 +90,9 @@ const MintNFTInput = ({...props}) => {
         {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
+      Your Account: {currentAccount} --- {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
+      <hr></hr>
+      {cPending}
       </TabPanel>
       <TabPanel value={value} index={2}>
 
