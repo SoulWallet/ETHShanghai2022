@@ -7,7 +7,6 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Checkbox from '@material-ui/core/Checkbox';
-import { Description } from '@ethersproject/properties';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -58,9 +57,9 @@ const MintNFTInput = ({...props}) => {
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
-    const [checked, setChecked] = React.useState(true);
+    // const [checked, setChecked] = React.useState(true);
     const handleChange2 = (event) => {
-      setChecked(event.target.checked);
+      // setChecked(event.target.checked);
       event.target.checked ? setDoubleIssuance(true) : setDoubleIssuance(false);
       console.log("checked:",event.target.checked)
 
