@@ -105,7 +105,9 @@ const MintNFTInput = ({...props}) => {
           <select
           className="input"
           placeholder="Select Type"
-          onChange={(e) => setSelectEventID(e.target.value)}
+          onChange={(e) => setSelectEventID(e.target.value)
+          
+          }
           >
             <option>Marriage
             </option>
