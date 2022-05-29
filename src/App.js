@@ -377,7 +377,7 @@ const App = () => {
           let cftime = moment(porposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
-           <button  onClick={()=>approvePropose({proposeHash})}>Mint My Invitation</button>
+           <button  onClick={()=>approvePropose(proposeHash)}>Mint My Invitation</button>
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>
