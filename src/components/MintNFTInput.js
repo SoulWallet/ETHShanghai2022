@@ -68,7 +68,7 @@ const MintNFTInput = ({...props}) => {
 
     };
 
-    let {name, setName, currentAccount, NFTsToMint, cHistory, cPending,
+    let {name, setName, currentAccount, NFTsToMint, cHistory, cPending, createdCount,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
@@ -85,7 +85,7 @@ const MintNFTInput = ({...props}) => {
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        Your Account: {currentAccount}<hr></hr>
+        Your Account: {currentAccount}---- You have create {createdCount} proposal.<hr></hr>
         {cHistory}
         {/* history end */}
       </TabPanel>

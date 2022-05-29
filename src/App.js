@@ -42,6 +42,8 @@ const App = () => {
   const [selectEventID, setSelectEventID] = useState("");
   const [cHistory, setCHistory] = useState("");
   const [cPending, setCPending] = useState("");
+  const [createdCount, setCreatedCount] = useState("");
+  
   
   const [arrNFT, setArrNFT] = useState([]); //NFT input data
   const [NFTsToMint, setNFTsToMint] = useState("");
@@ -411,7 +413,9 @@ const App = () => {
         console.log("Propose I have:",currentPropose);
         
         let historyItems = [];
+        let createdCount = 0;
         currentPropose.map(async(item,index)=> {
+          createdCount  = createdCount+1;
             const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
             console.log("Created by you, propose hash:",item);
             let cttime = moment(hashPorposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
@@ -439,6 +443,7 @@ const App = () => {
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
           setCHistory(historyItems);
+          setCreatedCount(createdCount);
           console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
@@ -494,7 +499,7 @@ const App = () => {
           <MintNFTInput 
           name={name} setName={setName} 
           NFTsToMint={NFTsToMint} currentAccount={currentAccount}
-          cHistory={cHistory} cPending={cPending}
+          cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
