@@ -37,19 +37,14 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
   const [description,setDescription] = useState("");
-  
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
   const [cHistory, setCHistory] = useState("");
   const [cPending, setCPending] = useState("");
   const [createdCount, setCreatedCount] = useState("");
-  
-  
-  const [arrNFT, setArrNFT] = useState([]); //NFT input data
   const [NFTsToMint, setNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
-  // const [remainingNFTs, setRemainingNFTs] = useState("");
   // const [nftCollectionData, setNftCollectionData] = useState("");
   const [recentlyMinted, setRecentlyMinted] = useState("");
   const [transactionState, setTransactionState] = useState(
@@ -166,7 +161,7 @@ const App = () => {
   } 
 
   /* Create the IPFS CID of the json data */
-  const createNFTData = async (jsonData) => {
+  const createNFTData = async () => {
     // console.log("saving to NFT storage...");
     resetState();
     // console.log("clear state...");
@@ -187,7 +182,6 @@ const App = () => {
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
     // console.log("connectionID----you select ",connectionID);
 
-    console.log(arrNFT);
     try {
       await client
         .store({
