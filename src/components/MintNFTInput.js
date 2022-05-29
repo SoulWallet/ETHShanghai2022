@@ -21,8 +21,8 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box component={'span'} p={3}>
+          <Typography component={'span'}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
 
 const MintNFTInput = ({...props}) => {
     // console.log("mintuiprops", props);
-    let jsonData = [];
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     
@@ -60,19 +59,19 @@ const MintNFTInput = ({...props}) => {
       setValue(newValue);
     };
     const [checked, setChecked] = React.useState(true);
-    const [selectDI, setSelectDI] = React.useState(true);
     const handleChange2 = (event) => {
       setChecked(event.target.checked);
-      event.target.checked ? setSelectDI(true) : setSelectDI(false);
+      event.target.checked ? setDoubleIssuance(true) : setDoubleIssuance(false);
       console.log("checked:",event.target.checked)
 
     };
 
-    let {name, setName, currentAccount, NFTsToMint, cHistory, cPending,
+    let {name, setName, description, setDescription, currentAccount,
+       NFTsToMint, cHistory, cPending, createdCount, setDoubleIssuance,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
-    <hr/>
+    --------------------------------------------------------------------
     {/* tab begin  */}
 
     <div className={classes.root}>
@@ -85,18 +84,17 @@ const MintNFTInput = ({...props}) => {
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        Your Account: {currentAccount}<hr></hr>
+        Your Account: {currentAccount}  ---- You have create {createdCount} proposal.
+        <br/> --------------------------------------------------------------------
         {cHistory}
         {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
       Your Account: {currentAccount} --- {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
-      <hr></hr>
+      <br/> --------------------------------------------------------------------
       {cPending}
       </TabPanel>
       <TabPanel value={value} index={2}>
-
-
 
         {/* content begin */}
      
@@ -110,9 +108,7 @@ const MintNFTInput = ({...props}) => {
           className="input"
           placeholder="Select Type"
           onChange={(e) => setSelectEventID(e.target.value)
-          
-          }
-          >
+          }>
             <option>Marriage
             </option>
             <option>Citizenship
@@ -152,8 +148,8 @@ const MintNFTInput = ({...props}) => {
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
             required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />  &nbsp;
       <input
             className="input"
@@ -181,9 +177,11 @@ const MintNFTInput = ({...props}) => {
         >
           Create Realtion Propose
         </button>
+        <br /><br />
         </Box>
       {/* content end*/}
       </TabPanel>
+      
     </div>
 
     {/* tab end */}

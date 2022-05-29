@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import SoulToken from "./utils/SoulToken.json";
 import { NFTStorage, File } from "nft.storage";
 import { baseSVG } from "./utils/BaseSVG";
@@ -16,7 +15,6 @@ import Link from "./components/Link";
 import DisplayLinks from "./components/DisplayLinks";
 import ConnectWalletButton from "./components/ConnectWalletButton";
 import NFTViewer from "./components/NFTViewer";
-import { mnemonicToEntropy } from "ethers/lib/utils";
 
 const INITIAL_LINK_STATE = {
   etherscan: "",
@@ -38,16 +36,16 @@ const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
+  const [description,setDescription] = useState("");
+  const [doubleIssuance,setDoubleIssuance] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
   const [cHistory, setCHistory] = useState("");
   const [cPending, setCPending] = useState("");
-  
-  const [arrNFT, setArrNFT] = useState([]); //NFT input data
+  const [createdCount, setCreatedCount] = useState("");
   const [NFTsToMint, setNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
   const [imageView, setImageView] = useState("");
-  // const [remainingNFTs, setRemainingNFTs] = useState("");
   // const [nftCollectionData, setNftCollectionData] = useState("");
   const [recentlyMinted, setRecentlyMinted] = useState("");
   const [transactionState, setTransactionState] = useState(
@@ -63,6 +61,8 @@ const App = () => {
   /* If a wallet is connected, do some setup */
   useEffect(() => {
     setUpEventListener();
+    setCPending("");
+    setCHistory("");
     fetchNFTCollection();
   }, [currentAccount]);
 
@@ -145,8 +145,6 @@ const App = () => {
     setLinksObj(INITIAL_LINK_STATE);
     setName("");
     setReceiverAddress("");
-    setCPending("");
-    setCHistory("");
     setImageView("");
   }
 
@@ -164,55 +162,52 @@ const App = () => {
   } 
 
   /* Create the IPFS CID of the json data */
-  const createNFTData = async (jsonData) => {
-    console.log("saving to NFT storage...");
+  const createNFTData = async () => {
+    // console.log("saving to NFT storage...");
     resetState();
-    console.log("clear state...");
+    // console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
       loading: "Saving NFT data to NFT.Storage...",
     });
-    console.log("tx state clear");
+    // console.log("tx state clear");
 
     const client = new NFTStorage({
       token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDhiNGFGRDdENTBiZDYxOEZlRjhhNDUzMThiYmMwMDk1YjdDMTc5RjEiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1MTgyNzE0Nzg1OCwibmFtZSI6InRleHR2ZXJzZS1wcmQifQ.nzqaau57VZE-n_RuK5wOV5gVeffDicK8EHrvSKoN7Uo"
     });
-    console.log(client)
-    console.log("client state ok");
+    // console.log(client)
+    // console.log("client state ok");
 
-    //lets load up this token with some metadata and our image and save it to NFT.storage
     //image contains any File or Blob you want to save
-    //name, image, description, other traits.
-    // useBlob to save one item to IPFS
-    // use File to save all the json metadata needed - much like any object storage you're familiar with!
     let connectionID = 1;
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
-    console.log(arrNFT);
-    console.log("connectionID----you select ",connectionID);
+    // console.log("connectionID----you select ",connectionID);
+    let jsonData = {
+      name: `${name}`,
+      description: `${description}`,
+      attributes: [
+        {"trait_type": "Issuer",
+        "value": `${currentAccount}`
+      },
+      ],
+      connectionID: `${connectionID}`,
+      doubleIssuance:`${doubleIssuance}`,
+      image: new File(
+        [
+          `${baseSVG}${name}</text></svg>`,
+        ],
+        `SoulTokens.svg`,
+        {
+          type: "image/svg+xml",
+        }
+      ),          
+    };
+
     try {
       await client
-        .store({
-          name: `${name}`,
-          description: `${name}`,
-          attributes: [
-            {"trait_type": "Issuer",
-            "value": `${currentAccount}`
-          },
-          ],
-          connectionID: `${connectionID}`,
-          // "doubleIssuance":`${doubleIssuance}`,
-          image: new File(
-            [
-              `${baseSVG}${name}</text></svg>`,
-            ],
-            `SoulTokens.svg`,
-            {
-              type: "image/svg+xml",
-            }
-          ),          
-        })
+        .store(jsonData)
         .then((metadata) => {
-          console.log(metadata)
+          // console.log(metadata)
           setTransactionState({
             ...transactionState,
             success: "Saved NFT data to NFT.Storage...!! ",
@@ -223,7 +218,6 @@ const App = () => {
           // createImageView(metadata);  //todo
           
           // const status = await client.status(metadata.ipnft);
-          // console.log("status", status);
 
           askContractToMintNft(metadata.url);
         });
@@ -363,18 +357,20 @@ const App = () => {
         // get pending count
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
-        console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
+        // console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
         const approvePropose = async(hash) => await connectedContract.approvePropose(hash);
 
         let pendingItems=[];
         for(var i=0;i<NFTsToMint.toNumber();i++){
           let proposeHash = await connectedContract.pendingConfirmByIndex(currentAccount,i);
-          console.log("pendingConfirmByIndex:",proposeHash);
+          // console.log("pendingConfirmByIndex:",proposeHash);
           let porposeDetail =  await connectedContract.proposeInfo(proposeHash);
           // console.log("porposeDetail:",porposeDetail);
-          let cttime = moment(porposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
-          let cftime = moment(porposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
+          let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+          let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+          let mMint = porposeDetail["mutualMint"] ? "true" : "false";
+          let aStatus = porposeDetail["acceptStatus"] ? "true" : "false";
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
            <button  onClick={()=>approvePropose(proposeHash)}>Mint My Invitation</button>
@@ -387,15 +383,15 @@ const App = () => {
           <br/>
           "Propose confirmAt:":{cftime}
           <br/>
-          "Propose mutualMint:":{porposeDetail["mutualMint"]}
+          "Propose mutualMint:":{mMint}
           <br/>
-          "Propose acceptStatus:":{porposeDetail["acceptStatus"]}
+          "Propose acceptStatus:":{aStatus}
 
           <br/>
           "Propose eventId:":{porposeDetail["eventId"].toNumber()}
           <br/>
           "Propose tokenURI:":{porposeDetail["tokenURI"]}  
-          <br/> <hr></hr>                                                         
+          <br/> --------------------------------------------------------------------                                                         
           </p>);
           // console.log(pendingItems[0]);
         }
@@ -408,14 +404,24 @@ const App = () => {
         
         // get currentAccount's propose array
         let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
-        console.log("Propose I have:",currentPropose);
+        // console.log("Propose I have:",currentPropose);
         
         let historyItems = [];
+        let createdCount = 0;
         currentPropose.map(async(item,index)=> {
+          createdCount  = createdCount+1;
             const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
-            console.log("Created by you, propose hash:",item);
-            let cttime = moment(hashPorposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
-            let cftime = moment(hashPorposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
+            // console.log("Created by you, propose hash:",item);
+            // console.log("timestamp:",hashPorposeDetail["createAt"],"number:", hashPorposeDetail["createAt"].toNumber());
+
+            let cttime = moment((hashPorposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+            let cftime = moment((hashPorposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
+            let mMint = hashPorposeDetail["mutualMint"] ? "true" : "false";
+            let aStatus = hashPorposeDetail["acceptStatus"] ? "true" : "false";
+
+            // console.log("eventID:",hashPorposeDetail["eventId"]);
+            // console.log("eventID:",hashPorposeDetail["eventId"].toNumber());
+
             historyItems.push(<p key={index}>"Pending proposeHash:"{item}
             <br/>
             "Propose Issuer:":{hashPorposeDetail["from"]}
@@ -426,20 +432,20 @@ const App = () => {
             <br/>
             "Propose confirmAt:":{cftime}
             <br/>
-            "Propose mutualMint:":{hashPorposeDetail["mutualMint"]}
+            "Propose mutualMint:":{mMint}
             <br/>
-            "Propose acceptStatus:":{hashPorposeDetail["acceptStatus"]}
-  
+            "Propose acceptStatus:":{aStatus}
             <br/>
             "Propose eventId:":{hashPorposeDetail["eventId"].toNumber()}
             <br/>
             "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
-            <br/> <hr></hr>                                                         
+            <br/> --------------------------------------------------------------------                                                        
             </p>);            
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
           setCHistory(historyItems);
-          console.log("cHistory:",cHistory);
+          setCreatedCount(createdCount);
+          // console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
 
@@ -494,12 +500,13 @@ const App = () => {
           <MintNFTInput 
           name={name} setName={setName} 
           NFTsToMint={NFTsToMint} currentAccount={currentAccount}
-          cHistory={cHistory} cPending={cPending}
+          cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
+           description={description} setDescription={setDescription}
+           setDoubleIssuance={setDoubleIssuance}
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
-          
         )}
         {recentlyMinted && <NFTViewer recentlyMinted={recentlyMinted}/>}
       </>
