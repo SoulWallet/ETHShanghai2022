@@ -21,7 +21,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
+        <Box component={'span'} p={3}>
           <Typography component={'span'}>{children}</Typography>
         </Box>
       )}
@@ -72,7 +72,7 @@ const MintNFTInput = ({...props}) => {
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
     <div>
-    <hr/>
+    --------------------------------------------------------------------
     {/* tab begin  */}
 
     <div className={classes.root}>
@@ -85,13 +85,14 @@ const MintNFTInput = ({...props}) => {
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        Your Account: {currentAccount}  ---- You have create {createdCount} proposal.<hr></hr>
+        Your Account: {currentAccount}  ---- You have create {createdCount} proposal.
+        <br/> --------------------------------------------------------------------
         {cHistory}
         {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
       Your Account: {currentAccount} --- {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
-      <hr></hr>
+      <br/> --------------------------------------------------------------------
       {cPending}
       </TabPanel>
       <TabPanel value={value} index={2}>
@@ -177,9 +178,11 @@ const MintNFTInput = ({...props}) => {
         >
           Create Realtion Propose
         </button>
+        <br /><br />
         </Box>
       {/* content end*/}
       </TabPanel>
+      
     </div>
 
     {/* tab end */}

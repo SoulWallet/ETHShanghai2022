@@ -398,7 +398,7 @@ const App = () => {
           "Propose eventId:":{porposeDetail["eventId"].toNumber()}
           <br/>
           "Propose tokenURI:":{porposeDetail["tokenURI"]}  
-          <br/> <hr></hr>                                                         
+          <br/> --------------------------------------------------------------------                                                         
           </p>);
           // console.log(pendingItems[0]);
         }
@@ -446,7 +446,7 @@ const App = () => {
             "Propose eventId:":{hashPorposeDetail["eventId"].toNumber()}
             <br/>
             "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
-            <br/> <hr></hr>                                                         
+            <br/> --------------------------------------------------------------------                                                        
             </p>);            
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
