@@ -37,6 +37,7 @@ const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [name, setName] = useState("");
   const [description,setDescription] = useState("");
+  const [doubleIssuance,setDoubleIssuance] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
   const [cHistory, setCHistory] = useState("");
@@ -181,31 +182,32 @@ const App = () => {
     let connectionID = 1;
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
     // console.log("connectionID----you select ",connectionID);
+    let jsonData = {
+      name: `${name}`,
+      description: `${description}`,
+      attributes: [
+        {"trait_type": "Issuer",
+        "value": `${currentAccount}`
+      },
+      ],
+      connectionID: `${connectionID}`,
+      doubleIssuance:`${doubleIssuance}`,
+      image: new File(
+        [
+          `${baseSVG}${name}</text></svg>`,
+        ],
+        `SoulTokens.svg`,
+        {
+          type: "image/svg+xml",
+        }
+      ),          
+    };
 
     try {
       await client
-        .store({
-          name: `${name}`,
-          description: `${description}`,
-          attributes: [
-            {"trait_type": "Issuer",
-            "value": `${currentAccount}`
-          },
-          ],
-          connectionID: `${connectionID}`,
-          // "doubleIssuance":`${doubleIssuance}`,
-          image: new File(
-            [
-              `${baseSVG}${name}</text></svg>`,
-            ],
-            `SoulTokens.svg`,
-            {
-              type: "image/svg+xml",
-            }
-          ),          
-        })
+        .store(jsonData)
         .then((metadata) => {
-          console.log(metadata)
+          // console.log(metadata)
           setTransactionState({
             ...transactionState,
             success: "Saved NFT data to NFT.Storage...!! ",
@@ -216,7 +218,6 @@ const App = () => {
           // createImageView(metadata);  //todo
           
           // const status = await client.status(metadata.ipnft);
-          // console.log("status", status);
 
           askContractToMintNft(metadata.url);
         });
@@ -502,6 +503,7 @@ const App = () => {
           cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
            description={description} setDescription={setDescription}
+           doubleIssuance={doubleIssuance} setDoubleIssuance={setDoubleIssuance}
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
