@@ -53,7 +53,7 @@ const MintNFTInput = ({...props}) => {
     // console.log("mintuiprops", props);
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
-    
+    // const [fileBlob, setFileBlob] = React.useState();
     const handleChange = (event, newValue) => {
       setValue(newValue);
     };
@@ -65,7 +65,7 @@ const MintNFTInput = ({...props}) => {
 
     };
 
-    let {name, setName, description, setDescription, currentAccount,
+    let {name, setName, description, setDescription, currentAccount,fileBlob, setFileBlob,
        NFTsToMint, cHistory, cPending, createdCount, setDoubleIssuance,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
     return (
@@ -165,15 +165,14 @@ const MintNFTInput = ({...props}) => {
           {/* input area end */}
           <input
             className="input"
-            placeholder="Issuer"
+            placeholder="Select a picture"
             color="secondary"
-            type="text"
+            type="file"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
             required
-            disabled="disabled"
-            value={currentAccount}
-            onChange={(e) => setName(e.target.value)}
-          />  &nbsp;
+            // value={fileBlob}
+            onChange={(e) => setFileBlob(e.target)}
+          />  &nbsp;<br />
         <button
           onClick={createNFTData}
           className={
