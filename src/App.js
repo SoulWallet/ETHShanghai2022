@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import SoulToken from "./utils/SoulToken.json";
 import { NFTStorage, File } from "nft.storage";
 import { baseSVG } from "./utils/BaseSVG";
@@ -16,7 +15,6 @@ import Link from "./components/Link";
 import DisplayLinks from "./components/DisplayLinks";
 import ConnectWalletButton from "./components/ConnectWalletButton";
 import NFTViewer from "./components/NFTViewer";
-import { mnemonicToEntropy } from "ethers/lib/utils";
 
 const INITIAL_LINK_STATE = {
   etherscan: "",
