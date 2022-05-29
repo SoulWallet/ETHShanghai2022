@@ -397,6 +397,46 @@ const App = () => {
           // console.log(pendingItems[0]);
         }
         setCPending(pendingItems);
+
+        // 1. get currentAccount who create the propose
+        
+        // get currentAccount's propose array
+        let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
+        console.log("Propose I have:",currentPropose);
+        
+        let historyItems = [];
+        currentPropose.map(async(item,index)=> {
+            const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
+            console.log("Created by you, propose hash:",item);
+            let cttime = moment(hashPorposeDetail["createAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
+            let cftime = moment(hashPorposeDetail["confirmAt"].toNumber()).format("YYYY-MM-DD HH:mm:ss");
+            historyItems.push(<p key={index}>"Pending proposeHash:"{item}
+            <br/>
+            "Propose Issuer:":{hashPorposeDetail["from"]}
+            <br/>
+            "Propose Receiver:":{hashPorposeDetail["to"]}
+            <br/>
+            "Propose createAt:":{cttime}          
+            <br/>
+            "Propose confirmAt:":{cftime}
+            <br/>
+            "Propose mutualMint:":{hashPorposeDetail["mutualMint"]}
+            <br/>
+            "Propose acceptStatus:":{hashPorposeDetail["acceptStatus"]}
+  
+            <br/>
+            "Propose eventId:":{hashPorposeDetail["eventId"].toNumber()}
+            <br/>
+            "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
+            <br/> <hr></hr>                                                         
+            </p>);            
+            // setNftCollectionData(hashPorposeDetail); //update state
+            // await createImageURLsForRetrieval(hashPorposeDetail);
+          }) ;
+          setCHistory(historyItems);
+          console.log("cHistory:",cHistory);
+
+
         // const pendingPropose = async _ => {
         //   currentPropose.map(async(item,index)=> {
         //     const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
@@ -438,21 +478,6 @@ const App = () => {
         // // console.log("image:",imageNFT);
         //   // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
         // let approveHash = await connectedContract.approvePropose(hashPropose);
-
-
-        // // get currentAccount's propose
-        // let currentPropose = await connectedContract.getproposeIdByAddr(currentAccount);
-        // // console.log("Propose I have:",currentPropose);
-        
-        // // proposeInfo[proposeHash] = Propose(ss,dd,dd,dd,dd,dd)
-        // const getImagePrepare = async _ => {
-        //   currentPropose.map(async(item,index)=> {
-        //     const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
-        //     // console.log("Specify propose hash detail:",hashPorposeDetail);
-        //     setNftCollectionData(hashPorposeDetail); //update state
-        //     await createImageURLsForRetrieval(hashPorposeDetail);
-        //   }) 
-        // }
         
       } else {
         console.log("Ethereum object doesn't exist!");
