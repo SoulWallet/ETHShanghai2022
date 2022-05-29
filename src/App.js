@@ -38,6 +38,7 @@ const App = () => {
   const [name, setName] = useState("");
   const [receiverAddress, setReceiverAddress] = useState("");
   const [selectEventID, setSelectEventID] = useState("");
+  const [cHistory, setCHistory] = useState("");
   const [arrNFT, setArrNFT] = useState([]); //NFT input data
   const [NFTsToMint, setNFTsToMint] = useState("");
   const [linksObj, setLinksObj] = useState(INITIAL_LINK_STATE);
@@ -382,10 +383,12 @@ const App = () => {
           <br/>
           "Propose Issuer:":{porposeDetail["eventId"].toNumber()}
           <br/>
-          "Propose Issuer:":{porposeDetail["tokenURI"]}                                                            
+          "Propose Issuer:":{porposeDetail["tokenURI"]}  
+          <br/> <hr></hr>                                                         
           </p>);
           console.log(pendingItems[0]);
         }
+        setCHistory(pendingItems);
         // const pendingPropose = async _ => {
         //   currentPropose.map(async(item,index)=> {
         //     const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
@@ -469,9 +472,8 @@ const App = () => {
         ) : (
           <MintNFTInput 
           name={name} setName={setName} 
-          arrNFT={arrNFT} setArrNFT={setArrNFT} 
           NFTsToMint={NFTsToMint} currentAccount={currentAccount}
-          selectEventID={selectEventID} setSelectEventID={setSelectEventID} 
+          cHistory={cHistory} setSelectEventID={setSelectEventID} 
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
