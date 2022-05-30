@@ -177,7 +177,7 @@ const App = () => {
     let connectionID = 1;
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
     // console.log("connectionID----you select ",connectionID);
-    
+
     // let imageData = new File(
     //   [
     //     `${baseSVG}${name}</text></svg>`,
@@ -355,12 +355,11 @@ const App = () => {
           SoulToken.abi,
           signer
         );
-
         // 2> get the data as a receiver begin
         // get pending count
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
-        // console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
+        console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
         const approvePropose = async(hash) => await connectedContract.approvePropose(hash);
 
@@ -368,15 +367,20 @@ const App = () => {
         for(var i=0;i<NFTsToMint.toNumber();i++){
           let proposeHash = await connectedContract.pendingConfirmByIndex(currentAccount,i);
           // console.log("pendingConfirmByIndex:",proposeHash);
+
           let porposeDetail =  await connectedContract.proposeInfo(proposeHash);
           // console.log("porposeDetail:",porposeDetail);
+          if(parseInt(porposeDetail["from"])===0){
+            console.log("Issuer Address is zero, has been minted already!",porposeDetail["from"]);
+          }
+
           let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let mMint = porposeDetail["mutualMint"] ? "true" : "false";
           let aStatus = porposeDetail["acceptStatus"] ? "true" : "false";
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
-           <button  onClick={()=>approvePropose(proposeHash)}>Mint My Invitation</button>
+           <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Mint My Invitation</button>
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>
