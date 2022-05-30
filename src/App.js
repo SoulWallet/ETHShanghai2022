@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import SoulToken from "./utils/SoulToken.json";
-import { NFTStorage, File } from "nft.storage";
-import { baseSVG } from "./utils/BaseSVG";
+// import { NFTStorage, File } from "nft.storage";
+import { NFTStorage } from "nft.storage";
+// import { baseSVG } from "./utils/BaseSVG";
 import { ethers } from "ethers";
 import moment from "moment";
+
 
 /* UI Components & Style*/
 import "./styles/App.css";
@@ -31,6 +33,7 @@ const INITIAL_TRANSACTION_STATE = {
 
 // set constant contract address cause of server in fleek has no .env
 const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
+// const CONTRACT_ADDRESS = "0x8F14b5c9C96De13c306F19Ff791C19d86Fc09400";
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
 const App = () => {
@@ -75,6 +78,7 @@ const App = () => {
       return;
     } else {
       // console.log("We have the ethereum object", ethereum);
+
       console.log("---------------------------------")
       setUpEventListener();
     }
@@ -130,9 +134,24 @@ const App = () => {
           (sender, party, proposeHash, eventId) => {
             console.log("get a propose sendrequest ok, fetch it now....");
             console.log(sender, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",party,",hash is:  ",proposeHash);
-            fetchNFTCollection();
+            // fetchNFTCollection();
           }
         );
+
+        const filter = {
+          address: CONTRACT_ADDRESS,
+          topics: [
+            ethers.utils.id('Transfer(address,address,uint256)')
+          ]
+          }
+          
+        connectedContract.on(filter,
+          event => {
+            console.log("filter event:",event);
+            // fetchNFTCollection();
+          }
+        );
+
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -177,7 +196,7 @@ const App = () => {
     let connectionID = 1;
     connectionID = (selectEventID==='Citizenship') ? (connectionID=2) : (connectionID=1);
     // console.log("connectionID----you select ",connectionID);
-    
+
     // let imageData = new File(
     //   [
     //     `${baseSVG}${name}</text></svg>`,
@@ -197,7 +216,11 @@ const App = () => {
       attributes: [
         {"trait_type": "Issuer",
         "value": `${currentAccount}`
+      },       
+        {"trait_type": "Attester",
+      "value": `${receiverAddress}`
       },
+      
       ],
       connectionID: `${connectionID}`,
       doubleIssuance:`${doubleIssuance}`,
@@ -258,11 +281,11 @@ const App = () => {
         // sendRequest
         // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
         let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
-
+        let successString = "Proposal Request Operation Successfully!";
         connectedContract.on(
           "MakePropose",
           (from, to,proposeHash, eventId) => {
-            console.log(from, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",to,",hash is:  ",proposeHash);
+            console.log(from, " build a eventID=",eventId.toNumber(),",means:",selectEventID," nft for address: ",to,",hash is:  ",proposeHash);
             setLinksObj({
               ...linksObj,
               opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
@@ -276,7 +299,7 @@ const App = () => {
         await nftTxn.wait();
         setTransactionState({
           ...INITIAL_TRANSACTION_STATE,
-          success: "NFT Minted!",
+          success: successString,
         });
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -321,14 +344,7 @@ const App = () => {
         // let link = el[1].split("/");
         // let fetchURL = `https://${link[2]}.ipfs.dweb.link/${link[3]}`;
         console.log("fetchURL", ipfsGatewayLink);
-        const response = await fetch(ipfsGatewayLink, 
-      //     {
-      //     method : "GET",
-      //     mode: 'cors',
-      //     type: 'cors',
-      //     headers: {}
-      // }
-      );
+        const response = await fetch(ipfsGatewayLink,);
         const json = await response.json();
         // console.log("Responsejson", json)
         return json;
@@ -355,7 +371,6 @@ const App = () => {
           SoulToken.abi,
           signer
         );
-
         // 2> get the data as a receiver begin
         // get pending count
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
@@ -368,19 +383,24 @@ const App = () => {
         for(var i=0;i<NFTsToMint.toNumber();i++){
           let proposeHash = await connectedContract.pendingConfirmByIndex(currentAccount,i);
           // console.log("pendingConfirmByIndex:",proposeHash);
+
           let porposeDetail =  await connectedContract.proposeInfo(proposeHash);
           // console.log("porposeDetail:",porposeDetail);
+          // if(parseInt(porposeDetail["from"])===0){
+          //   console.log("Issuer Address is zero, has been minted already!",porposeDetail["from"]);
+          // }
+
           let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let mMint = porposeDetail["mutualMint"] ? "true" : "false";
           let aStatus = porposeDetail["acceptStatus"] ? "true" : "false";
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
-           <button  onClick={()=>approvePropose(proposeHash)}>Mint My Invitation</button>
+           <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Mint My Invitation</button>
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>
-          "Propose Receiver:":{porposeDetail["to"]}
+          "Propose Attester:":{porposeDetail["to"]}
           <br/>
           "Propose createAt:":{cttime}          
           <br/>
@@ -425,11 +445,11 @@ const App = () => {
             // console.log("eventID:",hashPorposeDetail["eventId"]);
             // console.log("eventID:",hashPorposeDetail["eventId"].toNumber());
 
-            historyItems.push(<p key={index}>"Pending proposeHash:"{item}
+            historyItems.push(<p key={index}>"Pending proposeHash":{item}
             <br/>
             "Propose Issuer:":{hashPorposeDetail["from"]}
             <br/>
-            "Propose Receiver:":{hashPorposeDetail["to"]}
+            "Propose Attester:":{hashPorposeDetail["to"]}
             <br/>
             "Propose createAt:":{cttime}          
             <br/>
@@ -444,20 +464,42 @@ const App = () => {
             "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
             <br/> --------------------------------------------------------------------                                                        
             </p>);            
+
+          
+          const fetchMetaUrl = (url) =>{  
+            return new Promise((resolve, reject) => 
+            {    
+              fetch(url,{      
+                method:'GET',      
+                headers: {'Content-Type': 'application/json;charset=UTF-8'},      
+                mode:'cors',    })     
+                .then(res =>{return res.json();    
+                }).then(res=>{      
+                  resolve(res)    
+                })  
+              })}; 
+
+          // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
+          let cidTemp = hashPorposeDetail[3].split('/')[2];
+          // console.log("pure cid: ",cidTemp);
+          let nameJson = hashPorposeDetail[3].split('/')[3];
+          // console.log("pure name: ",nameJson);
+          let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
+          console.log("urlJson:",uriJson);
+          await fetchMetaUrl(uriJson);
+
+
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
           setCHistory(historyItems);
+          // console.log("historyItems:------>",historyItems);
+          // console.log("historyItems:------>",cHistory);
           setCreatedCount(createdCount);
           // console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
+ 
 
-
-        // // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
-        // let cidTemp = hashPorposeDetail[3].split('/')[2];
-        // // console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
-        // let nameJson = hashPorposeDetail[3].split('/')[3];
-        // // console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
         
         // let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
         // // console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
@@ -473,8 +515,6 @@ const App = () => {
         // // console.log("imageUrl:",imageUrl);
         // let imageNFT = await  axios({method: 'get',url: `${jsonData.image}`});
         // // console.log("image:",imageNFT);
-        //   // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
-        // let approveHash = await connectedContract.approvePropose(hashPropose);
         
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -506,8 +546,7 @@ const App = () => {
           cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
            description={description} setDescription={setDescription}
-           setDoubleIssuance={setDoubleIssuance} 
-           fileBlob={fileBlob} setFileBlob={setFileBlob}
+           setDoubleIssuance={setDoubleIssuance} setFileBlob={setFileBlob}
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
