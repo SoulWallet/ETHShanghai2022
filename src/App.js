@@ -5,7 +5,6 @@ import { NFTStorage } from "nft.storage";
 // import { baseSVG } from "./utils/BaseSVG";
 import { ethers } from "ethers";
 import moment from "moment";
-import fetchJsonp from "fetch-jsonp";
 
 
 /* UI Components & Style*/
@@ -33,8 +32,8 @@ const INITIAL_TRANSACTION_STATE = {
 };
 
 // set constant contract address cause of server in fleek has no .env
-// const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
-const CONTRACT_ADDRESS = "0x8F14b5c9C96De13c306F19Ff791C19d86Fc09400";
+const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
+// const CONTRACT_ADDRESS = "0x8F14b5c9C96De13c306F19Ff791C19d86Fc09400";
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
 const App = () => {
