@@ -5,6 +5,8 @@ import { NFTStorage } from "nft.storage";
 // import { baseSVG } from "./utils/BaseSVG";
 import { ethers } from "ethers";
 import moment from "moment";
+import fetchJsonp from "fetch-jsonp";
+
 
 /* UI Components & Style*/
 import "./styles/App.css";
@@ -450,7 +452,7 @@ const App = () => {
             <br/> --------------------------------------------------------------------                                                        
             </p>);            
 
-          console.log("uri:",hashPorposeDetail["tokenURI"]);
+          // console.log("uri:",hashPorposeDetail["tokenURI"]);
 
           // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
           let cidTemp = hashPorposeDetail[3].split('/')[2];
@@ -459,7 +461,8 @@ const App = () => {
           // console.log("pure name: ",nameJson);
           let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
           console.log("urlJson:",uriJson);
-          // fetchUrl(uriJson);
+          fetchUrl(uriJson);
+
 
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
@@ -468,16 +471,13 @@ const App = () => {
           // console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
-
-        const fetchUrl = (url)=>{
-          fetch(url,{
+        const fetchUrl = async (url)=>{
+          await fetchJsonp(url,{
             method:'GET',
-            headers:{
-              'Content-Type':'application/json;charset=UTF-8'
-            },
-            // mode:'cors',
-            mode: "no-cors",
-            cache:'default'
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            mode:'cors',
+            // mode: "no-cors",
+            // cache:'default'
           })
            .then(res =>res.json())
            .then((data) => {
