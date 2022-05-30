@@ -68,6 +68,7 @@ const MintNFTInput = ({...props}) => {
     let {name, setName, description, setDescription, currentAccount, setFileBlob,
        NFTsToMint, cHistory, cPending, createdCount, setDoubleIssuance,
       receiverAddress, setReceiverAddress, setSelectEventID, transactionState, createNFTData} = props;
+      // console.log("cHistory(input):--->",cHistory);
     return (
     <div>
     --------------------------------------------------------------------

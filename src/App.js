@@ -33,7 +33,8 @@ const INITIAL_TRANSACTION_STATE = {
 };
 
 // set constant contract address cause of server in fleek has no .env
-const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
+// const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
+const CONTRACT_ADDRESS = "0x8F14b5c9C96De13c306F19Ff791C19d86Fc09400";
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
 const App = () => {
@@ -78,6 +79,7 @@ const App = () => {
       return;
     } else {
       // console.log("We have the ethereum object", ethereum);
+
       console.log("---------------------------------")
       setUpEventListener();
     }
@@ -200,7 +202,11 @@ const App = () => {
       attributes: [
         {"trait_type": "Issuer",
         "value": `${currentAccount}`
+      },       
+        {"trait_type": "Attester",
+      "value": `${currentAccount}`
       },
+      
       ],
       connectionID: `${connectionID}`,
       doubleIssuance:`${doubleIssuance}`,
@@ -467,12 +473,14 @@ const App = () => {
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
           setCHistory(historyItems);
+          // console.log("historyItems:------>",historyItems);
+          // console.log("historyItems:------>",cHistory);
           setCreatedCount(createdCount);
           // console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
         const fetchUrl = async (url)=>{
-          await fetchJsonp(url,{
+          await fetch(url,{
             method:'GET',
             headers: {'Content-Type': 'application/json;charset=UTF-8'},
             mode:'cors',
@@ -496,7 +504,7 @@ const App = () => {
                  console.log(this.state.arr)
                })
              })
-           }) 
+           }) ;
         }
 
         
