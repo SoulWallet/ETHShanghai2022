@@ -36,6 +36,11 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
         bytes32 proposeId,
         uint256 eventId
     );
+
+     event TokenMinted(
+        uint256 indexed tokenId,
+        string indexed tokenURI
+    );
     /// @notice mapping pendingConfirm based on address
     mapping(address => mapping(uint256 => bytes32)) public pendingConfirm;
     /// @notice number of pending confirms by address
@@ -246,6 +251,7 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
         _mint(_party, newItemId);
         _setTokenURI(newItemId, _tokenURI);
 
+        emit TokenMinted(newItemId, _tokenURI);
         return newItemId;
     }
 
@@ -313,7 +319,6 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
      function getproposeIdByAddr(address _addr) external view returns (bytes32[] memory){
         return proposeIdByAddr[_addr];
     }
-    
     /// @notice withdraw the ether in the contract
     /// @dev
     /// @return
