@@ -464,21 +464,7 @@ const App = () => {
             <br/>
             "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
             <br/> --------------------------------------------------------------------                                                        
-            </p>);            
-
-          
-          const fetchMetaUrl = (url) =>{  
-            return new Promise((resolve, reject) => 
-            {    
-              fetch(url,{      
-                method:'GET',      
-                headers: {'Content-Type': 'application/json;charset=UTF-8'},      
-                mode:'cors',    })     
-                .then(res =>{return res.json();    
-                }).then(res=>{      
-                  resolve(res)    
-                })  
-              })}; 
+            </p>);       
 
           // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
           let cidTemp = hashPorposeDetail[3].split('/')[2];
@@ -489,10 +475,8 @@ const App = () => {
           console.log("urlJson:",uriJson);
           let jsonMeta = await axios({method: 'get',url: `${uriJson}`});
           console.log("jsonMeta:",jsonMeta.data);
-          // await fetchMetaUrl(uriJson);
 
-
-            // await createImageURLsForRetrieval(hashPorposeDetail);
+          // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
           setCHistory(historyItems);
           // console.log("historyItems:------>",historyItems);
@@ -501,16 +485,7 @@ const App = () => {
           // console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
- 
 
-        
-        // let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
-        // // console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
-        // let jsonData = {};
-        // await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`}).then(response=>{
-        //   // console.log("jsonMeta:", response.data);
-        //   jsonData = response.data;
-        // });
         // let nameNFT = jsonData.name;
         // let descriptionNFT = jsonData.description;
         // let external_url = jsonData.external_url;
