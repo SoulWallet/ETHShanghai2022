@@ -134,9 +134,24 @@ const App = () => {
           (sender, party, proposeHash, eventId) => {
             console.log("get a propose sendrequest ok, fetch it now....");
             console.log(sender, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",party,",hash is:  ",proposeHash);
-            fetchNFTCollection();
+            // fetchNFTCollection();
           }
         );
+
+        const filter = {
+          address: CONTRACT_ADDRESS,
+          topics: [
+            ethers.utils.id('Transfer(address,address,uint256)')
+          ]
+          }
+          
+        connectedContract.on(filter,
+          event => {
+            console.log("filter event:",event);
+            // fetchNFTCollection();
+          }
+        );
+
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -203,7 +218,7 @@ const App = () => {
         "value": `${currentAccount}`
       },       
         {"trait_type": "Attester",
-      "value": `${currentAccount}`
+      "value": `${receiverAddress}`
       },
       
       ],
@@ -266,11 +281,11 @@ const App = () => {
         // sendRequest
         // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
         let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
-
+        let successString = "Proposal Request Operation Successfully!";
         connectedContract.on(
           "MakePropose",
           (from, to,proposeHash, eventId) => {
-            console.log(from, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",to,",hash is:  ",proposeHash);
+            console.log(from, " build a eventID=",eventId.toNumber(),",means:",selectEventID," nft for address: ",to,",hash is:  ",proposeHash);
             setLinksObj({
               ...linksObj,
               opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
@@ -284,7 +299,7 @@ const App = () => {
         await nftTxn.wait();
         setTransactionState({
           ...INITIAL_TRANSACTION_STATE,
-          success: "NFT Minted!",
+          success: successString,
         });
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -329,14 +344,7 @@ const App = () => {
         // let link = el[1].split("/");
         // let fetchURL = `https://${link[2]}.ipfs.dweb.link/${link[3]}`;
         console.log("fetchURL", ipfsGatewayLink);
-        const response = await fetch(ipfsGatewayLink, 
-      //     {
-      //     method : "GET",
-      //     mode: 'cors',
-      //     type: 'cors',
-      //     headers: {}
-      // }
-      );
+        const response = await fetch(ipfsGatewayLink,);
         const json = await response.json();
         // console.log("Responsejson", json)
         return json;
@@ -392,7 +400,7 @@ const App = () => {
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>
-          "Propose Receiver:":{porposeDetail["to"]}
+          "Propose Attester:":{porposeDetail["to"]}
           <br/>
           "Propose createAt:":{cttime}          
           <br/>
@@ -441,7 +449,7 @@ const App = () => {
             <br/>
             "Propose Issuer:":{hashPorposeDetail["from"]}
             <br/>
-            "Propose Receiver:":{hashPorposeDetail["to"]}
+            "Propose Attester:":{hashPorposeDetail["to"]}
             <br/>
             "Propose createAt:":{cttime}          
             <br/>
@@ -457,7 +465,19 @@ const App = () => {
             <br/> --------------------------------------------------------------------                                                        
             </p>);            
 
-          // console.log("uri:",hashPorposeDetail["tokenURI"]);
+          
+          const fetchMetaUrl = (url) =>{  
+            return new Promise((resolve, reject) => 
+            {    
+              fetch(url,{      
+                method:'GET',      
+                headers: {'Content-Type': 'application/json;charset=UTF-8'},      
+                mode:'cors',    })     
+                .then(res =>{return res.json();    
+                }).then(res=>{      
+                  resolve(res)    
+                })  
+              })}; 
 
           // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
           let cidTemp = hashPorposeDetail[3].split('/')[2];
@@ -466,7 +486,7 @@ const App = () => {
           // console.log("pure name: ",nameJson);
           let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
           console.log("urlJson:",uriJson);
-          fetchUrl(uriJson);
+          await fetchMetaUrl(uriJson);
 
 
             // await createImageURLsForRetrieval(hashPorposeDetail);
@@ -478,33 +498,7 @@ const App = () => {
           // console.log("cHistory:",cHistory);
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
-        const fetchUrl = async (url)=>{
-          await fetch(url,{
-            method:'GET',
-            headers: {'Content-Type': 'application/json;charset=UTF-8'},
-            mode:'cors',
-            // mode: "no-cors",
-            // cache:'default'
-          })
-           .then(res =>res.json())
-           .then((data) => {
-             console.log("data:",data)  
-             this.setState({
-               test:data
-             },function(){
-               console.log(this.state.test)
-               let com = this.state.test.retBody.map((item,index)=>{
-                 console.log(item.id)
-                 return <li key={index}>{item.name}</li>
-               })
-               this.setState({
-                 arr : com
-               },function(){
-                 console.log(this.state.arr)
-               })
-             })
-           }) ;
-        }
+ 
 
         
         // let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
