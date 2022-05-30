@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import SoulToken from "./utils/SoulToken.json";
-import { NFTStorage, File } from "nft.storage";
-import { baseSVG } from "./utils/BaseSVG";
+// import { NFTStorage, File } from "nft.storage";
+import { NFTStorage } from "nft.storage";
+// import { baseSVG } from "./utils/BaseSVG";
 import { ethers } from "ethers";
 import moment from "moment";
 
@@ -359,7 +360,7 @@ const App = () => {
         // get pending count
         let NFTsToMint = await connectedContract.pendingConfirmCount(currentAccount);
         setNFTsToMint(NFTsToMint.toNumber()); //update state
-        console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
+        // console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
         const approvePropose = async(hash) => await connectedContract.approvePropose(hash);
 
@@ -370,9 +371,9 @@ const App = () => {
 
           let porposeDetail =  await connectedContract.proposeInfo(proposeHash);
           // console.log("porposeDetail:",porposeDetail);
-          if(parseInt(porposeDetail["from"])===0){
-            console.log("Issuer Address is zero, has been minted already!",porposeDetail["from"]);
-          }
+          // if(parseInt(porposeDetail["from"])===0){
+          //   console.log("Issuer Address is zero, has been minted already!",porposeDetail["from"]);
+          // }
 
           let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
@@ -448,6 +449,14 @@ const App = () => {
             "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
             <br/> --------------------------------------------------------------------                                                        
             </p>);            
+
+          console.log("uri:",hashPorposeDetail["tokenURI"]);
+          // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
+          let cidTemp = hashPorposeDetail[3].split('/')[2];
+          console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
+          let nameJson = hashPorposeDetail[3].split('/')[3];
+          console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
           setCHistory(historyItems);
@@ -457,11 +466,7 @@ const App = () => {
         //await createImageURLsForRetrieval(hashPorposeDetail);
 
 
-        // // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
-        // let cidTemp = hashPorposeDetail[3].split('/')[2];
-        // // console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
-        // let nameJson = hashPorposeDetail[3].split('/')[3];
-        // // console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+
         
         // let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
         // // console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
@@ -477,8 +482,6 @@ const App = () => {
         // // console.log("imageUrl:",imageUrl);
         // let imageNFT = await  axios({method: 'get',url: `${jsonData.image}`});
         // // console.log("image:",imageNFT);
-        //   // approve the specify eventID's hash, to mint for currentAccount, need click page to trigger
-        // let approveHash = await connectedContract.approvePropose(hashPropose);
         
       } else {
         console.log("Ethereum object doesn't exist!");
@@ -510,8 +513,7 @@ const App = () => {
           cHistory={cHistory} cPending={cPending} createdCount={createdCount}
            setSelectEventID={setSelectEventID} 
            description={description} setDescription={setDescription}
-           setDoubleIssuance={setDoubleIssuance} 
-           fileBlob={fileBlob} setFileBlob={setFileBlob}
+           setDoubleIssuance={setDoubleIssuance} setFileBlob={setFileBlob}
           receiverAddress={receiverAddress} setReceiverAddress={setReceiverAddress} 
           transactionState={transactionState} 
           createNFTData={createNFTData}/>
