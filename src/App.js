@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SoulToken from "./utils/SoulToken.json";
-// import { NFTStorage, File } from "nft.storage";
 import { NFTStorage } from "nft.storage";
-// import { baseSVG } from "./utils/BaseSVG";
 import { ethers } from "ethers";
 import moment from "moment";
+import axios from "axios";
 
 
 /* UI Components & Style*/
@@ -322,38 +321,16 @@ const App = () => {
     let link = el[1].split("/");
     let fetchURL = `https://${link[2]}.ipfs.dweb.link/${link[3]}`;
     return fetchURL;
-  }
+  };
 
-  /* 
-    Helper function for fetching the Filecoin data through IPFS gateways 
-    to display the images in the UI 
-  */
-  const createImageURLsForRetrieval = async (collection) => {
-    console.log("getImgUrl:",collection);
-    let dataCollection = collection
-    .slice()
-    .reverse()
-    .slice(0, 5)
-    .map((el) => {
-      return el;
-    });
 
-    let imgURLs = await Promise.all(
-      dataCollection.map(async (el) => {
-        const ipfsGatewayLink = createIPFSgatewayLink(el);
-        // let link = el[1].split("/");
-        // let fetchURL = `https://${link[2]}.ipfs.dweb.link/${link[3]}`;
-        console.log("fetchURL", ipfsGatewayLink);
-        const response = await fetch(ipfsGatewayLink,);
-        const json = await response.json();
-        // console.log("Responsejson", json)
-        return json;
-      })
-    );
-
-    console.log("imgURLs2", imgURLs);
-    setRecentlyMinted(imgURLs);
-  }
+  // show image 2
+  // const createImageURLsForRetrieval =  (collection) => collection.map(
+  //   async(item,index)=> {
+  //     console.log("item",item);
+  //     console.log("index",index);
+  //     // let imgUrls2 = [];
+  //   });
 
  /* Function to get our collection Data from
     1. The blockchain
@@ -389,11 +366,27 @@ const App = () => {
           // if(parseInt(porposeDetail["from"])===0){
           //   console.log("Issuer Address is zero, has been minted already!",porposeDetail["from"]);
           // }
-
           let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let mMint = porposeDetail["mutualMint"] ? "true" : "false";
           let aStatus = porposeDetail["acceptStatus"] ? "true" : "false";
+
+          let cidTemp1 = porposeDetail[3].split('/')[2];
+          let nameJson1 = porposeDetail[3].split('/')[3];
+          let metaIFPS =  `${ipfsBaseGate}${cidTemp1}/${nameJson1}`;
+          // console.log("metaIFPS",metaIFPS);
+          let jsonMeta = null;
+          try{
+            jsonMeta = await axios({method: 'get',url: `${metaIFPS}`});
+          } catch(e){
+              console.log(e);
+          };
+             
+          // console.log("jsonMeta---mint:",jsonMeta.data['image']); 
+          let noImageUrl = "no";
+          let imageUrl2 = (jsonMeta) ? (ipfsBaseGate + jsonMeta.data['image'].split('/')[2] +'/'+jsonMeta.data['image'].split('/')[3]) : (noImageUrl) ;
+          console.log("imageUrl2---mint:",imageUrl2);
+
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
            <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Mint My Invitation</button>
@@ -414,6 +407,8 @@ const App = () => {
           "Propose eventId:":{porposeDetail["eventId"].toNumber()}
           <br/>
           "Propose tokenURI:":{porposeDetail["tokenURI"]}  
+          <br />
+          <img src={imageUrl2} alt="NFT You Mint" width={300} height={300}    />  
           <br/> --------------------------------------------------------------------                                                         
           </p>);
           // console.log(pendingItems[0]);
@@ -436,7 +431,6 @@ const App = () => {
             const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
             // console.log("Created by you, propose hash:",item);
             // console.log("timestamp:",hashPorposeDetail["createAt"],"number:", hashPorposeDetail["createAt"].toNumber());
-
             let cttime = moment((hashPorposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
             let cftime = moment((hashPorposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
             let mMint = hashPorposeDetail["mutualMint"] ? "true" : "false";
@@ -444,6 +438,14 @@ const App = () => {
 
             // console.log("eventID:",hashPorposeDetail["eventId"]);
             // console.log("eventID:",hashPorposeDetail["eventId"].toNumber());
+            let cidTemp = hashPorposeDetail[3].split('/')[2];
+            let nameJson = hashPorposeDetail[3].split('/')[3];
+            let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
+            let jsonMeta = await axios({method: 'get',url: `${uriJson}`});
+            // console.log("jsonMeta:",jsonMeta.data['image']);  
+            // hashPropose.push(jsonMeta.data);
+            let imageUrl = ipfsBaseGate + jsonMeta.data['image'].split('/')[2] +'/'+jsonMeta.data['image'].split('/')[3];
+            console.log("imageUrl:",imageUrl);
 
             historyItems.push(<p key={index}>"Pending proposeHash":{item}
             <br/>
@@ -462,60 +464,14 @@ const App = () => {
             "Propose eventId:":{hashPorposeDetail["eventId"].toNumber()}
             <br/>
             "Propose tokenURI:":{hashPorposeDetail["tokenURI"]}  
-            <br/> --------------------------------------------------------------------                                                        
-            </p>);            
-
-          
-          const fetchMetaUrl = (url) =>{  
-            return new Promise((resolve, reject) => 
-            {    
-              fetch(url,{      
-                method:'GET',      
-                headers: {'Content-Type': 'application/json;charset=UTF-8'},      
-                mode:'cors',    })     
-                .then(res =>{return res.json();    
-                }).then(res=>{      
-                  resolve(res)    
-                })  
-              })}; 
-
-          // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
-          let cidTemp = hashPorposeDetail[3].split('/')[2];
-          // console.log("pure cid: ",cidTemp);
-          let nameJson = hashPorposeDetail[3].split('/')[3];
-          // console.log("pure name: ",nameJson);
-          let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
-          console.log("urlJson:",uriJson);
-          await fetchMetaUrl(uriJson);
-
-
-            // await createImageURLsForRetrieval(hashPorposeDetail);
+            <br/> 
+            <img src={imageUrl} alt="Propose You Create" width={300} height={300}    />  
+            <br/> --------------------------------------------------------------------------                                                
+            </p>);       
           }) ;
           setCHistory(historyItems);
-          // console.log("historyItems:------>",historyItems);
-          // console.log("historyItems:------>",cHistory);
           setCreatedCount(createdCount);
-          // console.log("cHistory:",cHistory);
-
-        //await createImageURLsForRetrieval(hashPorposeDetail);
- 
-
-        
-        // let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
-        // // console.log("tttt:",`${ipfsBaseGate}${cidTemp}/${nameJson}`);
-        // let jsonData = {};
-        // await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`}).then(response=>{
-        //   // console.log("jsonMeta:", response.data);
-        //   jsonData = response.data;
-        // });
-        // let nameNFT = jsonData.name;
-        // let descriptionNFT = jsonData.description;
-        // let external_url = jsonData.external_url;
-        // let imageUrl = ipfsBaseGate + jsonData.image.split('/')[2] +'/'+jsonData.image.split('/')[3];
-        // // console.log("imageUrl:",imageUrl);
-        // let imageNFT = await  axios({method: 'get',url: `${jsonData.image}`});
-        // // console.log("image:",imageNFT);
-        
+          // setRecentlyMinted();      
       } else {
         console.log("Ethereum object doesn't exist!");
       }
