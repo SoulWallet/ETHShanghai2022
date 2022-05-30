@@ -366,11 +366,27 @@ const App = () => {
           // if(parseInt(porposeDetail["from"])===0){
           //   console.log("Issuer Address is zero, has been minted already!",porposeDetail["from"]);
           // }
-
           let cttime = moment((porposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let cftime = moment((porposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
           let mMint = porposeDetail["mutualMint"] ? "true" : "false";
           let aStatus = porposeDetail["acceptStatus"] ? "true" : "false";
+
+          let cidTemp1 = porposeDetail[3].split('/')[2];
+          let nameJson1 = porposeDetail[3].split('/')[3];
+          let metaIFPS =  `${ipfsBaseGate}${cidTemp1}/${nameJson1}`;
+          // console.log("metaIFPS",metaIFPS);
+          let jsonMeta = null;
+          try{
+            jsonMeta = await axios({method: 'get',url: `${metaIFPS}`});
+          } catch(e){
+              console.log(e);
+          };
+             
+          // console.log("jsonMeta---mint:",jsonMeta.data['image']); 
+          let noImageUrl = "no";
+          let imageUrl2 = (jsonMeta) ? (ipfsBaseGate + jsonMeta.data['image'].split('/')[2] +'/'+jsonMeta.data['image'].split('/')[3]) : (noImageUrl) ;
+          console.log("imageUrl2---mint:",imageUrl2);
+
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
            <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Mint My Invitation</button>
@@ -391,6 +407,8 @@ const App = () => {
           "Propose eventId:":{porposeDetail["eventId"].toNumber()}
           <br/>
           "Propose tokenURI:":{porposeDetail["tokenURI"]}  
+          <br />
+          <img src={imageUrl2} alt="NFT You Mint" width={300} height={300}    />  
           <br/> --------------------------------------------------------------------                                                         
           </p>);
           // console.log(pendingItems[0]);
