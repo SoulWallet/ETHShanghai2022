@@ -5,6 +5,7 @@ import { NFTStorage } from "nft.storage";
 // import { baseSVG } from "./utils/BaseSVG";
 import { ethers } from "ethers";
 import moment from "moment";
+import axios from "axios";
 
 
 /* UI Components & Style*/
@@ -486,7 +487,9 @@ const App = () => {
           // console.log("pure name: ",nameJson);
           let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
           console.log("urlJson:",uriJson);
-          await fetchMetaUrl(uriJson);
+          let jsonMeta = await axios({method: 'get',url: `${uriJson}`});
+          console.log("jsonMeta:",jsonMeta.data);
+          // await fetchMetaUrl(uriJson);
 
 
             // await createImageURLsForRetrieval(hashPorposeDetail);
