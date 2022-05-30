@@ -430,7 +430,7 @@ const App = () => {
             // console.log("eventID:",hashPorposeDetail["eventId"]);
             // console.log("eventID:",hashPorposeDetail["eventId"].toNumber());
 
-            historyItems.push(<p key={index}>"Pending proposeHash:"{item}
+            historyItems.push(<p key={index}>"Pending proposeHash":{item}
             <br/>
             "Propose Issuer:":{hashPorposeDetail["from"]}
             <br/>
@@ -451,11 +451,15 @@ const App = () => {
             </p>);            
 
           console.log("uri:",hashPorposeDetail["tokenURI"]);
+
           // console.log("Pending confirm nft's propose hash detail:",hashPorposeDetail);
           let cidTemp = hashPorposeDetail[3].split('/')[2];
-          console.log("pure cid: ",hashPorposeDetail[3].split('/')[2]);
+          // console.log("pure cid: ",cidTemp);
           let nameJson = hashPorposeDetail[3].split('/')[3];
-          console.log("pure name: ",hashPorposeDetail[3].split('/')[3]);
+          // console.log("pure name: ",nameJson);
+          let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
+          console.log("urlJson:",uriJson);
+          // fetchUrl(uriJson);
 
             // await createImageURLsForRetrieval(hashPorposeDetail);
           }) ;
@@ -465,7 +469,35 @@ const App = () => {
 
         //await createImageURLsForRetrieval(hashPorposeDetail);
 
-
+        const fetchUrl = (url)=>{
+          fetch(url,{
+            method:'GET',
+            headers:{
+              'Content-Type':'application/json;charset=UTF-8'
+            },
+            // mode:'cors',
+            mode: "no-cors",
+            cache:'default'
+          })
+           .then(res =>res.json())
+           .then((data) => {
+             console.log("data:",data)  
+             this.setState({
+               test:data
+             },function(){
+               console.log(this.state.test)
+               let com = this.state.test.retBody.map((item,index)=>{
+                 console.log(item.id)
+                 return <li key={index}>{item.name}</li>
+               })
+               this.setState({
+                 arr : com
+               },function(){
+                 console.log(this.state.arr)
+               })
+             })
+           }) 
+        }
 
         
         // let jsonMeta = await axios({method: 'get',url: `${ipfsBaseGate}${cidTemp}/${nameJson}`});
