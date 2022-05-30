@@ -407,14 +407,12 @@ const App = () => {
         // console.log("Propose I have:",currentPropose);
         
         let historyItems = [];
-        let hashPropose = [];
         let createdCount = 0;
         currentPropose.map(async(item,index)=> {
           createdCount  = createdCount+1;
             const hashPorposeDetail =  await connectedContract.proposeInfo(currentPropose[index]);
             // console.log("Created by you, propose hash:",item);
             // console.log("timestamp:",hashPorposeDetail["createAt"],"number:", hashPorposeDetail["createAt"].toNumber());
-            // hashPropose.push(hashPorposeDetail);
             let cttime = moment((hashPorposeDetail["createAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
             let cftime = moment((hashPorposeDetail["confirmAt"].toNumber())*1000).format("YYYY-MM-DD HH:mm:ss");
             let mMint = hashPorposeDetail["mutualMint"] ? "true" : "false";
@@ -426,7 +424,7 @@ const App = () => {
             let nameJson = hashPorposeDetail[3].split('/')[3];
             let uriJson =  `${ipfsBaseGate}${cidTemp}/${nameJson}`;
             let jsonMeta = await axios({method: 'get',url: `${uriJson}`});
-            console.log("jsonMeta:",jsonMeta.data['image']);  
+            // console.log("jsonMeta:",jsonMeta.data['image']);  
             // hashPropose.push(jsonMeta.data);
             let imageUrl = ipfsBaseGate + jsonMeta.data['image'].split('/')[2] +'/'+jsonMeta.data['image'].split('/')[3];
             console.log("imageUrl:",imageUrl);
@@ -453,11 +451,8 @@ const App = () => {
             <br/> --------------------------------------------------------------------------                                                
             </p>);       
           }) ;
-
           setCHistory(historyItems);
           setCreatedCount(createdCount);
-          console.log("hashPropose",hashPropose)
-          console.log("hashPropose",typeof(hashPropose)); 
           // setRecentlyMinted();      
       } else {
         console.log("Ethereum object doesn't exist!");
