@@ -17,6 +17,10 @@ import DisplayLinks from "./components/DisplayLinks";
 import ConnectWalletButton from "./components/ConnectWalletButton";
 import NFTViewer from "./components/NFTViewer";
 
+import 'antd/dist/antd.css';
+import { Button, notification } from 'antd';
+
+
 const INITIAL_LINK_STATE = {
   etherscan: "",
   opensea: "",
@@ -31,7 +35,8 @@ const INITIAL_TRANSACTION_STATE = {
 };
 
 // set constant contract address cause of server in fleek has no .env
-const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
+const CONTRACT_ADDRESS = "0x3C14304A8F5Cfd85929a07e30878EfD83f3e1624";// by dd
+// const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";
 // const CONTRACT_ADDRESS = "0x8F14b5c9C96De13c306F19Ff791C19d86Fc09400";
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
@@ -132,22 +137,27 @@ const App = () => {
           "MakePropose",
           (sender, party, proposeHash, eventId) => {
             console.log("get a propose sendrequest ok, fetch it now....");
-            console.log(sender, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",party,",hash is:  ",proposeHash);
+            // console.log(sender, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",party,",hash is:  ",proposeHash);
             // fetchNFTCollection();
           }
         );
 
-        const filter = {
-          address: CONTRACT_ADDRESS,
-          topics: [
-            ethers.utils.id('Transfer(address,address,uint256)')
-          ]
-          }
-          
-        connectedContract.on(filter,
-          event => {
-            console.log("filter event:",event);
+        // const filter = {
+        //   address: CONTRACT_ADDRESS,
+        //   topics: [
+        //     ethers.utils.id('Transfer(address,address,uint256)')
+        //   ]
+        //   }       
+        connectedContract.on("TokenMinted",
+          (newItemId, tokenURI) => {
+            // console.log("newItemId, :",newItemId.toNumber());
+            // console.log(", _tokenURI:",tokenURI);
+            setLinksObj({
+              ...linksObj,
+              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newItemId.toNumber()}`,
+            });
             // fetchNFTCollection();
+            console.log("listener");
           }
         );
 
@@ -187,7 +197,7 @@ const App = () => {
     // console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Saving NFT data to NFT.Storage...",
+      loading: "Saving Your proposal Meta data to IFPS with NFT.storage...",
     });
     // console.log("tx state clear");
 
@@ -261,7 +271,7 @@ const App = () => {
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Approving & minting NFT...",
+      loading: "Push Your Relation Proposal OnChain with Smart Contract...",
     });
 
     try {
@@ -285,12 +295,12 @@ const App = () => {
           "MakePropose",
           (from, to,proposeHash, eventId) => {
             console.log(from, " build a eventID=",eventId.toNumber(),",means:",selectEventID," nft for address: ",to,",hash is:  ",proposeHash);
-            setLinksObj({
-              ...linksObj,
-              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
-              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}:${eventId.toNumber()}`,
-              etherscan: `https://rinkeby.etherscan.io/tx/${nftTxn.hash}`,
-            });
+            // setLinksObj({
+            //   ...linksObj,
+            //   opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/`,
+            //   rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}/`,
+            //   etherscan: `https://rinkeby.etherscan.io/tx/${nftTxn.hash}`,
+            // });
           }
         );
 
@@ -323,6 +333,23 @@ const App = () => {
     return fetchURL;
   };
 
+  // notification
+  const openNotification = (successStr) => {
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Button type="primary" size="small" onClick={() => notification.close(key)}>
+        Confirm
+      </Button>
+    );
+    notification.open({
+      message: 'Notification Title',
+      description:
+      successStr,
+      btn,
+      key,
+      // onClose: close,
+    });
+  };
 
   // show image 2
   // const createImageURLsForRetrieval =  (collection) => collection.map(
@@ -354,7 +381,45 @@ const App = () => {
         setNFTsToMint(NFTsToMint.toNumber()); //update state
         // console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
-        const approvePropose = async(hash) => await connectedContract.approvePropose(hash);
+        const approvePropose = async(hash) => {
+
+          setTransactionState({
+            ...INITIAL_TRANSACTION_STATE,
+            loading: "Open wallet to approve and mint your Soul Bound NFT...",
+          });          
+
+          await connectedContract.approvePropose(hash);
+          let successStr = "";
+          connectedContract.on("TokenMinted",
+            (newItemId, tokenURI) => {
+              let newId = newItemId.toNumber();
+              successStr = successStr + `<a href=https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}>New NFT Click Here!</a>`+'<br />';
+              console.log("newItemId, :",newItemId.toNumber());
+              console.log(", _tokenURI:",tokenURI);
+              setLinksObj({
+                ...linksObj,
+                opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`,
+              });
+
+              setTransactionState({
+                ...INITIAL_TRANSACTION_STATE,
+                success: `You mint Soul Bound NFT Successfully!`,
+              }); 
+              
+              setLinksObj({
+                ...linksObj,
+                opensea: successStr,
+              });
+              console.log("successStr:::",successStr);
+              openNotification(successStr);
+              // fetchNFTCollection();
+            }
+          ); 
+          
+          // get accumulated events return id and make it into links to show
+          document.getElementById("hackNotify").innerHTML=successStr;
+        
+        };
 
         let pendingItems=[];
         for(var i=0;i<NFTsToMint.toNumber();i++){
@@ -471,6 +536,7 @@ const App = () => {
           }) ;
           setCHistory(historyItems);
           setCreatedCount(createdCount);
+          
           // setRecentlyMinted();      
       } else {
         console.log("Ethereum object doesn't exist!");

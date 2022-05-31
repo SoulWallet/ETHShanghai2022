@@ -20,6 +20,7 @@ const Header = () => {
 PoS is a permissionliss soul bound token issue/mint protocol. <br/>
 You’re welcome to issue souldbound Token to your lover, friends and community to show your love!
       </p>
+      <div id ='hackNotify'></div>
     </>
   );
 };

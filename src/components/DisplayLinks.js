@@ -17,9 +17,9 @@ const DisplayLinks = ({linksObj, ...props}) => {
     {linksObj.etherscan &&
       renderLink(linksObj.etherscan, "See your Transaction on Etherscan")}
     {linksObj.opensea &&
-      renderLink(linksObj.opensea, "See your NFT on OpenSea")}
+      renderLink(linksObj.opensea, "See your Propose Collections on OpenSea")}
     {linksObj.rarible &&
-      renderLink(linksObj.rarible, "See your NFT on Rarible")}
+      renderLink(linksObj.rarible, "See your Propose Collections on Rarible")}
       </>
   )
 }
