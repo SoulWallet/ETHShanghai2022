@@ -385,7 +385,7 @@ const App = () => {
 
           setTransactionState({
             ...INITIAL_TRANSACTION_STATE,
-            loading: "Connect wallet to approve and mint your Soul Bound NFT...",
+            loading: "Open wallet to approve and mint your Soul Bound NFT...",
           });          
 
           await connectedContract.approvePropose(hash);
@@ -393,7 +393,7 @@ const App = () => {
           connectedContract.on("TokenMinted",
             (newItemId, tokenURI) => {
               let newId = newItemId.toNumber();
-              successStr = successStr + `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`+'<br />';
+              successStr = successStr + `<a href=https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}>New NFT Click Here!</a>`+'<br />';
               console.log("newItemId, :",newItemId.toNumber());
               console.log(", _tokenURI:",tokenURI);
               setLinksObj({
