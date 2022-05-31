@@ -197,7 +197,7 @@ const App = () => {
     // console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Saving Your proposal Meta data to IFPS with NFT.storage...",
+      loading: "Approve the transaction to create soul token.",
     });
     // console.log("tx state clear");
 
@@ -271,7 +271,7 @@ const App = () => {
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Push Your Relation Proposal OnChain with Smart Contract...",
+      loading: "Approve the transaction to create soul token.",
     });
 
     try {
@@ -290,7 +290,7 @@ const App = () => {
         // sendRequest
         // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
         let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
-        let successString = "Proposal Request Operation Successfully!";
+        let successString = "Transaction approved, please invite your friends to attest and collect the soul token.";
         connectedContract.on(
           "MakePropose",
           (from, to,proposeHash, eventId) => {
@@ -385,7 +385,7 @@ const App = () => {
 
           setTransactionState({
             ...INITIAL_TRANSACTION_STATE,
-            loading: "Open wallet to approve and mint your soulbound NFT...",
+            loading: "Approve the transaction to mint your soul token.",
           });          
 
           await connectedContract.approvePropose(hash);
@@ -403,7 +403,7 @@ const App = () => {
 
               setTransactionState({
                 ...INITIAL_TRANSACTION_STATE,
-                success: `You mint Soul Bound NFT Successfully!`,
+                success: `Soul token minted successfully!`,
               }); 
               
               setLinksObj({
@@ -452,7 +452,7 @@ const App = () => {
 
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
-           <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Mint My Invitation</button>
+           <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Attest (mint)</button>
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>

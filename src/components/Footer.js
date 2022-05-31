@@ -7,11 +7,11 @@ const Footer = (props) => {
       <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
       <a
         className="footer-text"
-        href="https://twitter.com/SBTs"
+        href="https://twitter.com/zengjiajun_eth"
         target="_blank"
         rel="noreferrer"
       >
-        SoulBoundTokens
+        ProofofSoul
       </a>
     </div>
   );

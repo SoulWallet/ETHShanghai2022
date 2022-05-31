@@ -84,13 +84,13 @@ const MintNFTInput = ({...props}) => {
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        Your Account: {currentAccount}  ---- You have create {createdCount} proposal.
+        Your Account: {currentAccount}  ---- You have created {createdCount} soul token.
         <br/> --------------------------------------------------------------------
         {cHistory}
         {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      Your Account: {currentAccount} --- {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
+      Your Account: {currentAccount} --- {`Pending invitation: ${NFTsToMint}`}
       <br/> --------------------------------------------------------------------
       {cPending}
       </TabPanel>
@@ -143,7 +143,7 @@ const MintNFTInput = ({...props}) => {
           /><br /> <br />
           <input
             className="input"
-            placeholder="Enter description"
+            placeholder="Enter Description"
             color="secondary"
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"
