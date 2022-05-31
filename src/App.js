@@ -400,7 +400,7 @@ const App = () => {
 
           setTransactionState({
             ...INITIAL_TRANSACTION_STATE,
-            loading: "Open wallet to approve and mint your Soul Bound NFT...",
+            loading: "Open wallet to approve and mint your soulbound NFT...",
           });          
 
           await connectedContract.approvePropose(hash);

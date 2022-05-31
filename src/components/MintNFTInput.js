@@ -78,7 +78,7 @@ const MintNFTInput = ({...props}) => {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
           <Tab label="Creation History" {...a11yProps(0)} />
-          <Tab label="Attestion Invitation" {...a11yProps(1)} />
+          <Tab label="Attestation Invitation" {...a11yProps(1)} />
           <Tab label="Create new Soul Token" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
@@ -119,7 +119,7 @@ const MintNFTInput = ({...props}) => {
         color="primary"
         onChange={(e) => handleChange2(e)}
         inputProps={{ 'aria-label': 'secondary checkbox' }}
-      /> <label>doubleIssuance</label>
+      /> <label>Double Issuance</label>
           <br /> <br />
           <input
             className="input"

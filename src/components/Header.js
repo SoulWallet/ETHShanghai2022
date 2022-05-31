@@ -17,8 +17,8 @@ const Header = () => {
       </a>
       <p className="header gradient-text">Welcome to Proof of Soul! </p>
       <p className="sub-text gradient-text">
-PoS is a permissionliss soul bound token issue/mint protocol. <br/>
-You’re welcome to issue souldbound Token to your lover, friends and community to show your love!
+PoS is a permissionless soulbound token issue/mint protocol. <br/>
+You’re welcome to issue souldbound token to your lover, friends and community to show your love!
       </p>
       <div id ='hackNotify'></div>
     </>
