@@ -143,18 +143,17 @@ const App = () => {
         //   topics: [
         //     ethers.utils.id('Transfer(address,address,uint256)')
         //   ]
-        //   }
-          
+        //   }       
         connectedContract.on("TokenMinted",
           (newItemId, tokenURI) => {
-            console.log("newItemId, :",newItemId.toNumber());
-            console.log(", _tokenURI:",tokenURI);
+            // console.log("newItemId, :",newItemId.toNumber());
+            // console.log(", _tokenURI:",tokenURI);
             setLinksObj({
               ...linksObj,
               opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newItemId.toNumber()}`,
-              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}/${newItemId.toNumber()}`,
             });
             // fetchNFTCollection();
+            console.log("listener");
           }
         );
 
@@ -292,12 +291,12 @@ const App = () => {
           "MakePropose",
           (from, to,proposeHash, eventId) => {
             console.log(from, " build a eventID=",eventId.toNumber(),",means:",selectEventID," nft for address: ",to,",hash is:  ",proposeHash);
-            setLinksObj({
-              ...linksObj,
-              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/`,
-              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}/`,
-              etherscan: `https://rinkeby.etherscan.io/tx/${nftTxn.hash}`,
-            });
+            // setLinksObj({
+            //   ...linksObj,
+            //   opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/`,
+            //   rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}/`,
+            //   etherscan: `https://rinkeby.etherscan.io/tx/${nftTxn.hash}`,
+            // });
           }
         );
 
@@ -361,7 +360,35 @@ const App = () => {
         setNFTsToMint(NFTsToMint.toNumber()); //update state
         // console.log("fetchNFTCollection---------->NFTsToMint:",NFTsToMint.toNumber());
 
-        const approvePropose = async(hash) => await connectedContract.approvePropose(hash);
+        const approvePropose = async(hash) => {
+
+          setTransactionState({
+            ...INITIAL_TRANSACTION_STATE,
+            loading: "Try to connect wallet to mint your Soul Bound NFT...",
+          });          
+
+          await connectedContract.approvePropose(hash);
+          let newId = 0;
+          
+          connectedContract.on("TokenMinted",
+            (newItemId, tokenURI) => {
+              let newId = newItemId.toNumber();
+              let successStr = `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`;
+              console.log("newItemId, :",newItemId.toNumber());
+              console.log(", _tokenURI:",tokenURI);
+              setTransactionState({
+                ...INITIAL_TRANSACTION_STATE,
+                success: `<a href=${successStr}>You mint Soul Bound NFT Successfully!</a>`,
+              }); 
+              // setLinksObj({
+              //   ...linksObj,
+              //   opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newItemId.toNumber()}`,
+              // });
+              // fetchNFTCollection();
+            }
+          );         
+        
+        };
 
         let pendingItems=[];
         for(var i=0;i<NFTsToMint.toNumber();i++){
