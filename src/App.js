@@ -364,29 +364,37 @@ const App = () => {
 
           setTransactionState({
             ...INITIAL_TRANSACTION_STATE,
-            loading: "Try to connect wallet to mint your Soul Bound NFT...",
+            loading: "Connect wallet to approve and mint your Soul Bound NFT...",
           });          
 
           await connectedContract.approvePropose(hash);
-          let newId = 0;
-          
+          let successStr = "";
           connectedContract.on("TokenMinted",
             (newItemId, tokenURI) => {
               let newId = newItemId.toNumber();
-              let successStr = `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`;
+              successStr = successStr + `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`+'<br />';
               console.log("newItemId, :",newItemId.toNumber());
               console.log(", _tokenURI:",tokenURI);
+              setLinksObj({
+                ...linksObj,
+                opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`,
+              });
+
               setTransactionState({
                 ...INITIAL_TRANSACTION_STATE,
-                success: `<a href=${successStr}>You mint Soul Bound NFT Successfully!</a>`,
+                success: `You mint Soul Bound NFT Successfully!`,
               }); 
-              // setLinksObj({
-              //   ...linksObj,
-              //   opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newItemId.toNumber()}`,
-              // });
+              
+              setLinksObj({
+                ...linksObj,
+                opensea: successStr,
+              });
               // fetchNFTCollection();
             }
-          );         
+          ); 
+          
+          // get accumulated events return id and make it into links to show
+          document.getElementById("hackNotify").innerHTML=successStr;
         
         };
 
