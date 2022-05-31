@@ -1,5 +1,5 @@
 import React from "react";
-import nftHackLogo from "../assets/nfthack-logo.png";
+import nftHackLogo from "../assets/nfthack-logo.svg";
 
 const Header = () => {
   return (
