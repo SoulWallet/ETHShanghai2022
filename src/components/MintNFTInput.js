@@ -77,20 +77,20 @@ const MintNFTInput = ({...props}) => {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
-          <Tab label="Creation History" {...a11yProps(0)} />
-          <Tab label="Attestion Invitation" {...a11yProps(1)} />
+          <Tab label="Issuance History" {...a11yProps(0)} />
+          <Tab label="Attestation Invitation" {...a11yProps(1)} />
           <Tab label="Create new Soul Token" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        Your Account: {currentAccount}  ---- You have create {createdCount} proposal.
+        Your Account: {currentAccount}  ---- You have issued {createdCount} soul token.
         <br/> --------------------------------------------------------------------
         {cHistory}
         {/* history end */}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      Your Account: {currentAccount} --- {`Soul Bound Tokens to be Mint: ${NFTsToMint}`}
+      Your Account: {currentAccount} --- {`Pending invitation: ${NFTsToMint}`}
       <br/> --------------------------------------------------------------------
       {cPending}
       </TabPanel>
@@ -119,7 +119,7 @@ const MintNFTInput = ({...props}) => {
         color="primary"
         onChange={(e) => handleChange2(e)}
         inputProps={{ 'aria-label': 'secondary checkbox' }}
-      /> <label>doubleIssuance</label>
+      /> <label>Double Issuance</label>
           <br /> <br />
           <input
             className="input"
@@ -143,7 +143,7 @@ const MintNFTInput = ({...props}) => {
           /><br /> <br />
           <input
             className="input"
-            placeholder="Enter description"
+            placeholder="Enter Description"
             color="secondary"
             type="text"
             // pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{1,63}$"

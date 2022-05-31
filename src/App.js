@@ -197,7 +197,7 @@ const App = () => {
     // console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Saving Your proposal Meta data to IFPS with NFT.storage...",
+      loading: "Approve the transaction to issue soul token.",
     });
     // console.log("tx state clear");
 
@@ -271,7 +271,7 @@ const App = () => {
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Push Your Relation Proposal OnChain with Smart Contract...",
+      loading: "Approve the transaction to issue soul token.",
     });
 
     try {
@@ -290,7 +290,7 @@ const App = () => {
         // sendRequest
         // _party (address), _eventId (uint256), _mutualMint (bool), _tokenURI (string)
         let nftTxn = await connectedContract.sendRequest(receiverAddress, 2, true, IPFSurl);
-        let successString = "Proposal Request Operation Successfully!";
+        let successString = "Transaction approved, please invite your friends to attest and collect the soul token.";
         connectedContract.on(
           "MakePropose",
           (from, to,proposeHash, eventId) => {
@@ -385,15 +385,15 @@ const App = () => {
 
           setTransactionState({
             ...INITIAL_TRANSACTION_STATE,
-            loading: "Open wallet to approve and mint your Soul Bound NFT...",
+            loading: "Approve the transaction to mint your soul token.",
           });          
 
           await connectedContract.approvePropose(hash);
-          let successStr = "";
           connectedContract.on("TokenMinted",
             (newItemId, tokenURI) => {
               let newId = newItemId.toNumber();
-              successStr = successStr + `<a href=https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}>New NFT Click Here!</a>`+'<br />';
+              let url = `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`;
+              const successStr = <a href={url} target="_blank" rel="noreferrer">New NFT Click Here!</a>;
               console.log("newItemId, :",newItemId.toNumber());
               console.log(", _tokenURI:",tokenURI);
               setLinksObj({
@@ -403,21 +403,19 @@ const App = () => {
 
               setTransactionState({
                 ...INITIAL_TRANSACTION_STATE,
-                success: `You mint Soul Bound NFT Successfully!`,
+                success: `Soul token minted successfully!`,
               }); 
               
               setLinksObj({
                 ...linksObj,
                 opensea: successStr,
               });
-              console.log("successStr:::",successStr);
+              // console.log("successStr:::",successStr);
               openNotification(successStr);
               // fetchNFTCollection();
             }
           ); 
           
-          // get accumulated events return id and make it into links to show
-          document.getElementById("hackNotify").innerHTML=successStr;
         
         };
 
@@ -454,7 +452,7 @@ const App = () => {
 
           pendingItems.push(<p key={i}>
             "Pending proposeHash:"
-           <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Mint My Invitation</button>
+           <button  onClick={()=>(parseInt(porposeDetail["from"])===0) ? alert("You have minted it already!") : approvePropose(proposeHash)}>Attest (mint)</button>
           <br/>
           "Propose Issuer:":{porposeDetail["from"]}
           <br/>
