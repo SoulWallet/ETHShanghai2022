@@ -197,7 +197,7 @@ const App = () => {
     // console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Approve the transaction to create soul token.",
+      loading: "Approve the transaction to issue soul token.",
     });
     // console.log("tx state clear");
 
@@ -271,7 +271,7 @@ const App = () => {
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Approve the transaction to create soul token.",
+      loading: "Approve the transaction to issue soul token.",
     });
 
     try {

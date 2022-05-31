@@ -77,14 +77,14 @@ const MintNFTInput = ({...props}) => {
     <div className={classes.root}>
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
-          <Tab label="Creation History" {...a11yProps(0)} />
+          <Tab label="Issuance History" {...a11yProps(0)} />
           <Tab label="Attestation Invitation" {...a11yProps(1)} />
           <Tab label="Create new Soul Token" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         {/* history begin */}
-        Your Account: {currentAccount}  ---- You have created {createdCount} soul token.
+        Your Account: {currentAccount}  ---- You have issued {createdCount} soul token.
         <br/> --------------------------------------------------------------------
         {cHistory}
         {/* history end */}
