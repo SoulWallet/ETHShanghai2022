@@ -17,6 +17,10 @@ import DisplayLinks from "./components/DisplayLinks";
 import ConnectWalletButton from "./components/ConnectWalletButton";
 import NFTViewer from "./components/NFTViewer";
 
+import 'antd/dist/antd.css';
+import { Button, notification } from 'antd';
+
+
 const INITIAL_LINK_STATE = {
   etherscan: "",
   opensea: "",
@@ -133,7 +137,7 @@ const App = () => {
           "MakePropose",
           (sender, party, proposeHash, eventId) => {
             console.log("get a propose sendrequest ok, fetch it now....");
-            console.log(sender, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",party,",hash is:  ",proposeHash);
+            // console.log(sender, " build a eventID=",eventId,",means:",selectEventID," nft for address: ",party,",hash is:  ",proposeHash);
             // fetchNFTCollection();
           }
         );
@@ -329,6 +333,23 @@ const App = () => {
     return fetchURL;
   };
 
+  // notification
+  const openNotification = (successStr) => {
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Button type="primary" size="small" onClick={() => notification.close(key)}>
+        Confirm
+      </Button>
+    );
+    notification.open({
+      message: 'Notification Title',
+      description:
+      successStr,
+      btn,
+      key,
+      // onClose: close,
+    });
+  };
 
   // show image 2
   // const createImageURLsForRetrieval =  (collection) => collection.map(
@@ -389,6 +410,8 @@ const App = () => {
                 ...linksObj,
                 opensea: successStr,
               });
+              console.log("successStr:::",successStr);
+              openNotification(successStr);
               // fetchNFTCollection();
             }
           ); 
