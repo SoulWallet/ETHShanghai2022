@@ -166,6 +166,7 @@ contract SoulToken is ERC721URIStorage, Ownable, ReentrancyGuard {
 
         delete pendingConfirmHashIndex[_party][_proposeHash];
         delete pendingConfirm[_party][lastConfirmIndex];
+         pendingConfirmCount[_party] -=1;
     }
 
     /// @notice compute the request hash
