@@ -31,7 +31,8 @@ const INITIAL_TRANSACTION_STATE = {
 };
 
 // set constant contract address cause of server in fleek has no .env
-const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";// by dd
+const CONTRACT_ADDRESS = "0x3C14304A8F5Cfd85929a07e30878EfD83f3e1624";// by dd
+// const CONTRACT_ADDRESS = "0x935fb02F78B0dcC7C5D75BDFB9071f6CE60C5C91";
 // const CONTRACT_ADDRESS = "0x8F14b5c9C96De13c306F19Ff791C19d86Fc09400";
 const ipfsBaseGate = "https://nftstorage.link/ipfs/";
 
@@ -137,16 +138,22 @@ const App = () => {
           }
         );
 
-        const filter = {
-          address: CONTRACT_ADDRESS,
-          topics: [
-            ethers.utils.id('Transfer(address,address,uint256)')
-          ]
-          }
+        // const filter = {
+        //   address: CONTRACT_ADDRESS,
+        //   topics: [
+        //     ethers.utils.id('Transfer(address,address,uint256)')
+        //   ]
+        //   }
           
-        connectedContract.on(filter,
-          event => {
-            console.log("filter event:",event);
+        connectedContract.on("TokenMinted",
+          (newItemId, tokenURI) => {
+            console.log("newItemId, :",newItemId.toNumber());
+            console.log(", _tokenURI:",tokenURI);
+            setLinksObj({
+              ...linksObj,
+              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newItemId.toNumber()}`,
+              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}/${newItemId.toNumber()}`,
+            });
             // fetchNFTCollection();
           }
         );
@@ -187,7 +194,7 @@ const App = () => {
     // console.log("clear state...");
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Saving NFT data to NFT.Storage...",
+      loading: "Saving Your proposal Meta data to IFPS with NFT.storage...",
     });
     // console.log("tx state clear");
 
@@ -261,7 +268,7 @@ const App = () => {
     //should check the wallet chain is correct here
     setTransactionState({
       ...INITIAL_TRANSACTION_STATE,
-      loading: "Approving & minting NFT...",
+      loading: "Push Your Relation Proposal OnChain with Smart Contract...",
     });
 
     try {
@@ -287,8 +294,8 @@ const App = () => {
             console.log(from, " build a eventID=",eventId.toNumber(),",means:",selectEventID," nft for address: ",to,",hash is:  ",proposeHash);
             setLinksObj({
               ...linksObj,
-              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${eventId.toNumber()}`,
-              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}:${eventId.toNumber()}`,
+              opensea: `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/`,
+              rarible: `https://rinkeby.rarible.com/token/${CONTRACT_ADDRESS}/`,
               etherscan: `https://rinkeby.etherscan.io/tx/${nftTxn.hash}`,
             });
           }
@@ -471,6 +478,7 @@ const App = () => {
           }) ;
           setCHistory(historyItems);
           setCreatedCount(createdCount);
+          
           // setRecentlyMinted();      
       } else {
         console.log("Ethereum object doesn't exist!");
