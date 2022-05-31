@@ -18,7 +18,7 @@ import ConnectWalletButton from "./components/ConnectWalletButton";
 import NFTViewer from "./components/NFTViewer";
 
 import 'antd/dist/antd.css';
-import { Button, notification } from 'antd';
+import { Button, notification,Modal, Space } from 'antd';
 
 
 const INITIAL_LINK_STATE = {
@@ -351,6 +351,21 @@ const App = () => {
     });
   };
 
+
+  // modal confirm
+  const info = (msg) => {
+    Modal.info({
+      title: 'This is a notification message',
+      content: (
+        <div>
+          <p>{msg}</p>
+        </div>
+      ),
+  
+      onOk() {},
+    });
+  };
+
   // show image 2
   // const createImageURLsForRetrieval =  (collection) => collection.map(
   //   async(item,index)=> {
@@ -389,11 +404,13 @@ const App = () => {
           });          
 
           await connectedContract.approvePropose(hash);
-          let successStr = "";
+          // let successStr = "";
           connectedContract.on("TokenMinted",
             (newItemId, tokenURI) => {
               let newId = newItemId.toNumber();
-              successStr = successStr + `<a href=https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}>New NFT Click Here!</a>`+'<br />';
+              let url = `https://testnets.opensea.io/assets/${CONTRACT_ADDRESS}/${newId.toString()}`;
+              // successStr = <a href=${url}>New NFT Click Here!</a>;
+              const successStr = <a href={url} target="_blank" rel="noreferrer">New NFT Click Here!</a>;
               console.log("newItemId, :",newItemId.toNumber());
               console.log(", _tokenURI:",tokenURI);
               setLinksObj({
@@ -412,12 +429,13 @@ const App = () => {
               });
               console.log("successStr:::",successStr);
               openNotification(successStr);
+              // info("<div>"+successStr+"</div>");
               // fetchNFTCollection();
             }
           ); 
           
           // get accumulated events return id and make it into links to show
-          document.getElementById("hackNotify").innerHTML=successStr;
+          // document.getElementById("hackNotify").innerHTML=successStr;
         
         };
 
