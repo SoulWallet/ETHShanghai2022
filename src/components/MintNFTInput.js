@@ -79,7 +79,7 @@ const MintNFTInput = ({...props}) => {
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
           <Tab label="Issuance History" {...a11yProps(0)} />
           <Tab label="Attestation Invitation" {...a11yProps(1)} />
-          <Tab label="Create new Soul Token" {...a11yProps(2)} />
+          <Tab label="Issue new Soul Token" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
