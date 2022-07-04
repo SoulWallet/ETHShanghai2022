@@ -83,42 +83,43 @@ apiKey: process.env.ETHERSCAN_API_KEY,
 + ![](src/assets/infura-reward.jpeg)
 
 ### content
-About
+### About
+
 Proof of Soul is a permissionless soulbound token issuance/attestation protocol that enables people to bring relationships on-chain. 
 
 
 
-Our Story
+**Our Story**
 
 
 
-We're one of the ETHShanghai hackathon finalists.
+We're one of the [**ETHShanghai hackathon finalists**](https://medium.com/@ethshanghai/announcing-winners-of-the-eth-shanghai-hackathon-2022-4ebacdf660d2).
 
 
 
-Inspired by Glen Weyl, Puja, and Vitalik's latest paper on Decentralized Society and Soulbound Token, we believe the world will be a better place if we can bring relationships and affiliation on-chain. 
+Inspired by Glen Weyl, Puja, and Vitalik's [latest paper](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4105763) on Decentralized Society and Soulbound Token, we believe the world will be a better place if we can bring relationships and affiliation on-chain. 
 
 
 
-Therefore, we made a Demo to show the world the basic concept of how to issue and attest an SBT (Soulbound token).
+Therefore, we [made a Demo](https://www.youtube.com/watch?v=O3YiPVOWnVI&t=1s) to show the world the basic concept of how to issue and attest an SBT (Soulbound token).
 
 
 
-Future Plan
+**Future Plan**
 
 
 
 We decided to take it further and launch it on mainnet and L2 in late July with a better design and complete implementation, which
 
-1) enables people to revoke their SBT;
+\1) enables people to revoke their SBT;
 
-2) enable people to search, issue, and attest with ENS integration;
+\2) enable people to search, issue, and attest with **ENS** integration;
 
-3) link to various DID services like Proof of Humanity and brightID.
+\3) link to various DID services like Proof of Humanity and brightID.
 
 
 
-We need your help to sponsor our developer and engineer without taking VC money which might danger the neutrality we treasured. 
+**We need your help** to sponsor our developer and engineer without taking VC money which might danger the neutrality we treasured. 
 
 
 
@@ -126,11 +127,13 @@ We believe a decentralized society will be formed from the grassroots, with the 
 
 
 
-Thank you!
+**Thank you!**
 
 
 
-PS: our demo website is live on Rinkebey testnet only. Feel free to try it out!
+**PS: our** [**demo website**](https://www.proofofsoul.me/) **is live on Rinkebey testnet only. Feel free to try it out!**
 
 
+
+<iframe class="ql-video" frameborder="0" allowfullscreen="true" src="https://www.youtube.com/embed/O3YiPVOWnVI?showinfo=0" style="box-sizing: border-box; cursor: text; display: block; max-width: 100%; height: max(170px, 360px); width: clamp(340px, 660px, 100%);"></iframe>
 
