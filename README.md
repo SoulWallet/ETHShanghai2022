@@ -70,3 +70,67 @@ apiKey: process.env.ETHERSCAN_API_KEY,
 - See the NFT.School guide https://nftschool.dev/
 - Public Gateway status checker: https://ipfs.github.io/public-gateway-checker/
 - Faucets for rinkeby eth: https://faucets.chain.link/rinkeby
+
+### On gitcoin
++ Yes, we create a grant for this project, Thanks for all the contributors!
++ [gitcoin](https://gitcoin.co/grants/6231/proof-of-soul-soulbound-token-issuanceattestation)
++ Some pics we store to here:
++ ![](src/assets/g1.png)
++ ![](src/assets/g2.png)
++ ![](src/assets/g3.png)
++ ![](src/assets/g4.png)
++ ![](src/assets/g5.png)
++ ![](src/assets/infura-reward.jpeg)
+
+### content
+About
+Proof of Soul is a permissionless soulbound token issuance/attestation protocol that enables people to bring relationships on-chain. 
+
+
+
+Our Story
+
+
+
+We're one of the ETHShanghai hackathon finalists.
+
+
+
+Inspired by Glen Weyl, Puja, and Vitalik's latest paper on Decentralized Society and Soulbound Token, we believe the world will be a better place if we can bring relationships and affiliation on-chain. 
+
+
+
+Therefore, we made a Demo to show the world the basic concept of how to issue and attest an SBT (Soulbound token).
+
+
+
+Future Plan
+
+
+
+We decided to take it further and launch it on mainnet and L2 in late July with a better design and complete implementation, which
+
+1) enables people to revoke their SBT;
+
+2) enable people to search, issue, and attest with ENS integration;
+
+3) link to various DID services like Proof of Humanity and brightID.
+
+
+
+We need your help to sponsor our developer and engineer without taking VC money which might danger the neutrality we treasured. 
+
+
+
+We believe a decentralized society will be formed from the grassroots, with the help and support of the individuals.
+
+
+
+Thank you!
+
+
+
+PS: our demo website is live on Rinkebey testnet only. Feel free to try it out!
+
+
+
